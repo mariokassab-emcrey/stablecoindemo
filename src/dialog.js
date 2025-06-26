@@ -1,0 +1,211 @@
+import React, { useRef,useState } from 'react';
+import { Modal, Button, Row, Col, Form } from "react-bootstrap";
+import './App.css';
+import * as ethers from ".././node_modules/ethers/dist/ethers.min.js";
+function MyDialog(props) {
+  const dialogRef = useRef(null);
+  const [balance, setBalance] = useState(0);
+  const [gasFees, setGasFees] = useState(0);
+  const openDialog = () => {
+    if(balance===0){
+const element = document.getElementById("balanceSC")
+       
+           setBalance(element.innerText) 
+    }if(gasFees===0){
+       const elementPay = document.getElementById("balanceETH")
+           setGasFees(elementPay.innerText)
+           }
+    dialogRef.current.showModal(); // Opens the dialog
+  };
+
+  const closeDialog = () => {
+    dialogRef.current.close(); // Closes the dialog
+  };
+async function handleSubmit(event) {
+  event.preventDefault()
+  console.log("event"+event)
+  console.log("handling submit")
+  console.log("handling submit"+event.target.Address.value)
+  const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
+  const signer = await provider.getSigner();
+  const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
+  const erc20iAbi = [
+  // Some details about the token
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+
+  // Get the account balance
+  "function balanceOf(address) view returns (uint)",
+
+  // Send some of your tokens to someone else
+  "function transfer(address to, uint amount)",
+
+  // An event triggered whenever anyone transfers to someone else
+  "event Transfer(address indexed from, address indexed to, uint amount)"
+];
+  const writeStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, signer);
+  var valueDecimal18 = ethers.parseEther(event.target.Amount.value);
+   writeStablecoinContract.transfer(event.target.Address.value,valueDecimal18).then((balance) => {});
+}
+  return (
+    <div>
+      <button class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-800 transition-colors border border-secondary" onClick={openDialog}>Pay</button>
+      <dialog ref={dialogRef}>
+        {/* <h2>Dialog Title</h2> */}
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-800">
+
+                            {/* <!-- Title bar --> */}
+                            <div class="flex justify-between items-center mb-8">
+                                <div class="flex items-center gap-4">
+                                    <h1 class="text-3xl font-bold text-primary">Pay</h1>
+                                </div>
+                              
+                            </div>
+
+                            {/* <!-- Account Info Panel --> */}
+                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex gap-8">
+                                        <div class="self-center">
+                                            <h2 class="text-lg font-semibold text-primary">Account</h2>
+                                            <div style={{color: 'white'}} class="flex items-center gap-1 mt-1">
+                                               {props.account}
+                                             
+                                            </div>
+                                        </div>
+                                        <div style={{color: 'white'}} class="self-center">
+                                            <h2 class="text-lg font-semibold text-primary">Balance</h2>
+                                          {balance}
+                                        </div>
+                                        <div style={{color: 'white'}} class="self-center">
+                                            <h3 class="text-base font-semibold text-gray-400">Network Gas</h3>
+                                            {gasFees}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* <!-- Transactions Panel --> */}
+                            {/* <div  class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex flex-col items-center bg-card"> */}
+                                        {/* <div class="bg-card py-1">
+                                            <input type="text"  placeholder="address"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
+                                        </div> */}
+                                        {/* <div class="flex flex-col items-center bg-card py-1">
+                                            <input type="number"  placeholder="0.0"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
+                                        </div> */}
+                                        {/* <div class="flex flex-col items-center bg-card py-1">
+                                                <input type="text"  placeholder="reference"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
+                                        </div> */}
+                                          
+                                          <Form style={{color : 'white'}} onSubmit={handleSubmit}>
+                                            <Row>
+                                                <Col>
+                                                <Form.Group controlId="Address">
+                <Form.Label className="FormLabel">
+                  Address<font COLOR="#ff0000">*</font>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="Address"
+                  required
+                 
+                ></Form.Control>
+              </Form.Group>
+                                               
+                                                </Col>
+                                                <Col> <Form.Group controlId="Amount">
+                <Form.Label className="FormLabel">
+                  Amount<font COLOR="#ff0000">*</font>
+                </Form.Label>
+                <Form.Control
+                  type="float"
+                  name="Amount"
+                  required
+                 
+                ></Form.Control>
+              </Form.Group>
+                                                </Col>
+                                                <Col><Form.Group controlId="reference">
+                <Form.Label className="FormLabel">Reference</Form.Label>
+                <Form.Control
+                  type="text"
+                 
+                //   defaultValue={this.props.AssignmentTopic}
+                //   dir="RTL"
+                  name="reference"
+                ></Form.Control>
+              </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <br></br>
+                                            <Row sm={2} >
+                                    <Col lg='9'>
+                                    <Button id="payDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" type='submit' >
+                                        Confirm
+                                    </Button>
+                                    </Col>
+                                {/* </div> */}
+                            {/* </div> */}
+                             <Col dir='LTR' sm='3'>
+                             <Button className='Danger-button' variant='danger' onClick={closeDialog}>Cancel</Button>
+                             </Col>
+                       </Row>
+                                          </Form>
+                                          </div>
+            {/* <Form   onSubmit={()=>{}}>
+            <br></br>
+            {/* <h4 className="color-blue">الاحالة</h4> 
+            <Row>
+             <Col lg='3'>
+              <Form.Group controlId="PapersNumber">
+                <Form.Label className="FormLabel">
+                  number<font COLOR="#ff0000">*</font>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="PapersNumber"
+                  required
+                 
+                ></Form.Control>
+              </Form.Group>
+             </Col>
+             <Col lg='3'>
+               <Form.Group controlId="Topic">
+                  <Form.Label className="FormLabel">
+                    topic<font COLOR="#ff0000">*</font>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="Topic"
+                    required
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+              <Col lg='3'>
+                <Form.Group controlId="AssignmentTopic">
+                <Form.Label className="FormLabel">topic</Form.Label>
+                <Form.Control
+                  type="text"
+                 
+                //   defaultValue={this.props.AssignmentTopic}
+                //   dir="RTL"
+                  name="AssignmentTopic"
+                ></Form.Control>
+              </Form.Group>
+              </Col>
+             </Row>
+            
+              
+          </Form> */}
+           
+                                    {/* </div> */}
+                                    
+       
+      </dialog>
+    </div>
+  );
+}
+
+export default MyDialog;
