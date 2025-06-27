@@ -35,12 +35,12 @@ function MetaMaskLogin(props) {
     <div style={{color: 'White'}}>
       {providerDetected ? (
         account ? (
-          <p>Connected account: {account}</p>
+          <p class="text-lg font-semibold text-white">Connected account: {account}</p>
         ) : (
-          <p>Connecting to MetaMask...</p>
+          <p class="text-lg font-semibold text-white">Connecting to MetaMask...</p>
         )
       ) : (
-        <p>Please install MetaMask to connect.</p>
+        <p class="text-lg font-semibold text-white">Please install MetaMask to connect.</p>
       )}
     </div>
   );

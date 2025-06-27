@@ -1,11 +1,18 @@
 import React, { useRef,useState } from 'react';
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
-import * as ethers from ".././node_modules/ethers/dist/ethers.min.js";
-function MyDialog(props) {
+import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
+import AccountBookDialog from './AccountBookdialog.js';
+import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
+import { db } from "./firebaseConfig";
+function PayDialog(props) {
   const dialogRef = useRef(null);
   const [balance, setBalance] = useState(0);
   const [gasFees, setGasFees] = useState(0);
+  const [Address, setAddress] = useState();
+  const [Name, setName] = useState();
+  const [Amount, setAmount] = useState();
+ 
   const openDialog = () => {
     if(balance===0){
 const element = document.getElementById("balanceSC")
@@ -21,7 +28,9 @@ const element = document.getElementById("balanceSC")
   const closeDialog = () => {
     dialogRef.current.close(); // Closes the dialog
   };
+  
 async function handleSubmit(event) {
+
   event.preventDefault()
   console.log("event"+event)
   console.log("handling submit")
@@ -46,18 +55,35 @@ async function handleSubmit(event) {
   const writeStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, signer);
   var valueDecimal18 = ethers.parseEther(event.target.Amount.value);
    writeStablecoinContract.transfer(event.target.Address.value,valueDecimal18).then((balance) => {});
+try {
+      const transaction ={
+        From:props.account,
+        Name:event.target.Reference.value,
+        To:event.target.Address.value,
+        Amount:event.target.Amount.value,
+        TransactionDateTime:new Date()
+      }
+      await addDoc(collection(db, "Transaction"), transaction);
+      alert("Order placed successfully!");
+      
+      // ✅ Redirect back to menu after successful order
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error placing order: ", error);
+      alert("Failed to place order.");
+    }
 }
   return (
     <div>
-      <button class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-800 transition-colors border border-secondary" onClick={openDialog}>Pay</button>
+      <button class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}>Pay</button>
       <dialog ref={dialogRef}>
         {/* <h2>Dialog Title</h2> */}
-        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-800">
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
 
                             {/* <!-- Title bar --> */}
                             <div class="flex justify-between items-center mb-8">
                                 <div class="flex items-center gap-4">
-                                    <h1 class="text-3xl font-bold text-primary">Pay</h1>
+                                    <h1 class="text-3xl font-bold text-white">Pay</h1>
                                 </div>
                               
                             </div>
@@ -67,18 +93,18 @@ async function handleSubmit(event) {
                                 <div class="flex justify-between items-center">
                                     <div class="flex gap-8">
                                         <div class="self-center">
-                                            <h2 class="text-lg font-semibold text-primary">Account</h2>
+                                            <h2 class="text-lg font-semibold text-white">Account</h2>
                                             <div style={{color: 'white'}} class="flex items-center gap-1 mt-1">
                                                {props.account}
                                              
                                             </div>
                                         </div>
                                         <div style={{color: 'white'}} class="self-center">
-                                            <h2 class="text-lg font-semibold text-primary">Balance</h2>
+                                            <h2 class="text-lg font-semibold text-white">Balance</h2>
                                           {balance}
                                         </div>
                                         <div style={{color: 'white'}} class="self-center">
-                                            <h3 class="text-base font-semibold text-gray-400">Network Gas</h3>
+                                            <h3 class="text-base font-semibold text-white">Network Gas</h3>
                                             {gasFees}
                                         </div>
                                     </div>
@@ -98,7 +124,10 @@ async function handleSubmit(event) {
                                         {/* <div class="flex flex-col items-center bg-card py-1">
                                                 <input type="text"  placeholder="reference"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
                                         </div> */}
-                                          
+                                           <Col><AccountBookDialog fillAccountDetails={(account)=>{setAddress(account.Address)
+                                                  setAmount(account.Amount)
+                                                  setName(account.Name)
+                                                }}></AccountBookDialog></Col>
                                           <Form style={{color : 'white'}} onSubmit={handleSubmit}>
                                             <Row>
                                                 <Col>
@@ -107,10 +136,10 @@ async function handleSubmit(event) {
                   Address<font COLOR="#ff0000">*</font>
                 </Form.Label>
                 <Form.Control
-                  type="text"
+                  type="float"
                   name="Address"
                   required
-                 
+                 value={Address}
                 ></Form.Control>
               </Form.Group>
                                                
@@ -122,27 +151,29 @@ async function handleSubmit(event) {
                 <Form.Control
                   type="float"
                   name="Amount"
+                  value={Amount}
                   required
                  
                 ></Form.Control>
               </Form.Group>
                                                 </Col>
-                                                <Col><Form.Group controlId="reference">
+                                                <Col><Form.Group controlId="Reference">
                 <Form.Label className="FormLabel">Reference</Form.Label>
                 <Form.Control
                   type="text"
-                 
+                 value={Name}
                 //   defaultValue={this.props.AssignmentTopic}
                 //   dir="RTL"
-                  name="reference"
+                  name="Reference"
                 ></Form.Control>
               </Form.Group>
                                                 </Col>
+                                                
                                             </Row>
                                             <br></br>
                                             <Row sm={2} >
                                     <Col lg='9'>
-                                    <Button id="payDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" type='submit' >
+                                    <Button id="payDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="/submitPay" type='submit' >
                                         Confirm
                                     </Button>
                                     </Col>
@@ -153,54 +184,9 @@ async function handleSubmit(event) {
                              </Col>
                        </Row>
                                           </Form>
+                                         
                                           </div>
-            {/* <Form   onSubmit={()=>{}}>
-            <br></br>
-            {/* <h4 className="color-blue">الاحالة</h4> 
-            <Row>
-             <Col lg='3'>
-              <Form.Group controlId="PapersNumber">
-                <Form.Label className="FormLabel">
-                  number<font COLOR="#ff0000">*</font>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  name="PapersNumber"
-                  required
-                 
-                ></Form.Control>
-              </Form.Group>
-             </Col>
-             <Col lg='3'>
-               <Form.Group controlId="Topic">
-                  <Form.Label className="FormLabel">
-                    topic<font COLOR="#ff0000">*</font>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="Topic"
-                    required
-                  ></Form.Control>
-                </Form.Group>
-              </Col>
-              <Col lg='3'>
-                <Form.Group controlId="AssignmentTopic">
-                <Form.Label className="FormLabel">topic</Form.Label>
-                <Form.Control
-                  type="text"
-                 
-                //   defaultValue={this.props.AssignmentTopic}
-                //   dir="RTL"
-                  name="AssignmentTopic"
-                ></Form.Control>
-              </Form.Group>
-              </Col>
-             </Row>
             
-              
-          </Form> */}
-           
-                                    {/* </div> */}
                                     
        
       </dialog>
@@ -208,4 +194,4 @@ async function handleSubmit(event) {
   );
 }
 
-export default MyDialog;
+export default PayDialog;

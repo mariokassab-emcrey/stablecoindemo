@@ -1,10 +1,9 @@
 
 import './App.css';
-import HomeComponent from './Home';
-import TextInputExample from './TextInputExample';
+import Home from './Home';
 function App() {
   return (
-   <TextInputExample></TextInputExample>
+   <Home></Home>
 
   );
 }
