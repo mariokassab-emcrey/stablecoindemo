@@ -111,23 +111,11 @@ try {
                                 </div>
                             </div>
 
-                            {/* <!-- Transactions Panel --> */}
-                            {/* <div  class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <div class="flex flex-col items-center bg-card"> */}
-                                        {/* <div class="bg-card py-1">
-                                            <input type="text"  placeholder="address"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
-                                        </div> */}
-                                        {/* <div class="flex flex-col items-center bg-card py-1">
-                                            <input type="number"  placeholder="0.0"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
-                                        </div> */}
-                                        {/* <div class="flex flex-col items-center bg-card py-1">
-                                                <input type="text"  placeholder="reference"  class="w-80 text-sm text-gray-300 bg-panel px-1"></input>
-                                        </div> */}
-                                           <Col><AccountBookDialog fillAccountDetails={(account)=>{setAddress(account.Address)
+                         
+                                          <AccountBookDialog fillAccountDetails={(account)=>{setAddress(account.Address)
                                                   setAmount(account.Amount)
                                                   setName(account.Name)
-                                                }}></AccountBookDialog></Col>
+                                                }}></AccountBookDialog>
                                           <Form style={{color : 'white'}} onSubmit={handleSubmit}>
                                             <Row>
                                                 <Col>
@@ -162,8 +150,6 @@ try {
                 <Form.Control
                   type="text"
                  value={Name}
-                //   defaultValue={this.props.AssignmentTopic}
-                //   dir="RTL"
                   name="Reference"
                 ></Form.Control>
               </Form.Group>
@@ -177,8 +163,6 @@ try {
                                         Confirm
                                     </Button>
                                     </Col>
-                                {/* </div> */}
-                            {/* </div> */}
                              <Col dir='LTR' sm='3'>
                              <Button className='Danger-button' variant='danger' onClick={closeDialog}>Cancel</Button>
                              </Col>

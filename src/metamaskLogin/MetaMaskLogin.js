@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { Copy } from 'lucide-react';
 
 function MetaMaskLogin(props) {
-  const [account, setAccount] = useState(null);
+  const [account, setAccount] = useState('');
   const [providerDetected, setProviderDetected] = useState(false);
 
   useEffect(() => {
@@ -34,8 +35,13 @@ function MetaMaskLogin(props) {
   return (
     <div style={{color: 'White'}}>
       {providerDetected ? (
-        account ? (
-          <p class="text-lg font-semibold text-white">Connected account: {account}</p>
+        account ? (<div style={{display:'flex'}}>
+          <p style={{paddingRight:'10px'}} class="text-lg font-semibold text-white">Connected account: {props.truncateEthAddress(account)} </p>
+         <button onClick={()=>props.copyTextToClipboard(account)} >
+                  <Copy size={12}/>
+                </button>
+          
+          </div>
         ) : (
           <p class="text-lg font-semibold text-white">Connecting to MetaMask...</p>
         )

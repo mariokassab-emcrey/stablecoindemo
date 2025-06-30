@@ -2,11 +2,12 @@ import React, { useState,useEffect } from 'react';
 import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import EmcreyLogo from './images/emcrey-logo.png'
 import Transactions from './Transactions.js'
-import CreditCard from './images/creditCard.png'
+
 
 import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 import PayDialog from './Paydialog.js'
 import AccountBookDialog from './AccountBookdialog.js';
+import SubAccounts from './SubAccounts.js';
 function Home() {
   // Declare a state variable to hold the input's value
   const [inputValue, setInputValue] = useState('');
@@ -17,6 +18,20 @@ function Home() {
   const handleChange = (event) => {
     setInputValue(event.target.value);
   };
+  function truncateEthAddress(address) {
+  var truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
+    var match = address.match(truncateRegex);
+    if (!match)
+        return address;
+    return match[1] + "\u2026" + match[2];
+};
+async function copyTextToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+  }
+}
 async function getBalance(){
     const erc20iAbi = [
   // Some details about the token
@@ -126,7 +141,7 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
   useEffect(() => {getBalance()})
   return (
      <div>
-      <div class="flex justify-between items-center mb-8">
+      <div class="flex justify-between items-center mb-8" style={{margin:'15px'}}>
             <div class="flex items-center gap-4">
                 <h1 class="text-3xl font-bold text-white">SAR Wallet</h1>
                
@@ -144,22 +159,14 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
             </div>
         </div>
         
-       {/* <label htmlFor="myInput">Enter text:</label>
-       <input
-        type="text"
-        id="myInput"
-        value={inputValue} // Bind the input's value to the state variable
-        onChange={handleChange} // Update the state on change
-        placeholder="Type something..."
-      />
-      <p>Current input value: {inputValue}</p> */}
-       <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+   
+       <div class="bg-card rounded-lg shadow-lg px-6 py-1  border-gray mb-6" style={{margin:'15px'}}>
             <div class="flex justify-between items-center">
                 <div class="flex gap-8">
                     <div class="self-center">
                         <h2 class="text-lg font-semibold text-white">Account</h2>
                         <div class="flex items-center gap-1 mt-1">
-                           <MetaMaskLogin fillAccount={(account)=>{setAccount(account)}}></MetaMaskLogin>
+                           <MetaMaskLogin truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} fillAccount={(account)=>{setAccount(account)}}></MetaMaskLogin>
                         
                         </div>
                     </div>
@@ -171,32 +178,17 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
                         <h3 class="text-base font-semibold text-white">Network Gas</h3>
                         <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                     </div>
-
-                 
-                    
-                   
-                    
-
                     <div class="self-center">
-                       <PayDialog account={account} balance={balance} gasFees={gasFees}>
-                        
-                    </PayDialog>
-                    
+                       <PayDialog account={account} balance={balance} gasFees={gasFees}>                        
+                    </PayDialog>                    
                     </div>
-
-
-                    {/* <div class="self-center">
-                       <AccountBookDialog></AccountBookDialog>
-                        <button id="Accounts" class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">Accounts Book</button>
-                    </div> */}
                 </div>
                 <button class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">
                     Change Account
                 </button>
-            </div>
-            
+            </div>            
         </div>
-        <div id="transaction" class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+        <div id="transaction" class="bg-card rounded-lg shadow-lg px-6 py-1  border-gray-700 mb-6" style={{margin:'15px'}}>
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-lg font-semibold text-white">Transactions</h3>
                 <button 
@@ -213,175 +205,10 @@ const metaMaskAccount = metaMaskAccounts[0];
                     Show All
                 </button>
             </div>
-             <Transactions></Transactions>
-            <div class="space-y-4">
-                <div class="grid grid-cols-12 items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                   
-                    <div class="col-span-2">
-                        <h2 class="text-lg font-semibold text-white">Jacks Coffee</h2>
-                        <div class="display: flex gap-1">
-                           <span id="displayMetaMaskAddress" class="text-sm text-gray-300">0x5e6f...7g8h</span>
-                         
-                        </div>  
-                    </div>
-                    <div class="col-span-2">
-                        <h2 class="text-lg font-semibold text-white">Mada card</h2>
-                    </div>
-                    <div class="col-span-2 flex-direction: column justify-center mt-1">
-                        <p class="text-sm text-gray-300">Mon 15 Jun 2023</p>
-                        <p class="text-sm text-gray-300">18:35</p>
-                    </div>
-                    <div class="col-span-5 text-right">
-                        <p class="text-red-400 font-mono">-20.0000</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-12 items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                    <div class="col-span-1 w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
-                       
-                    </div>
-                    <div class="col-span-2">
-                        <h2 class="text-lg font-semibold text-white">Rami</h2>
-                        <div class="display: flex gap-1">
-                           <span id="displayMetaMaskAddress" class="text-sm text-white">0x6f12...6h23</span>
-                       
-                        </div>  
-                    </div>
-                    <div class="col-span-2">
-                        <h2 class="text-lg font-semibold text-white">Main account</h2>
-                    </div>
-                    <div class="col-span-2 flex-direction: column justify-center mt-1">
-                        <p class="text-sm text-gray-300">Mon 14 Jun 2023</p>
-                        <p class="text-sm text-gray-300">09:56</p>
-                    </div>
-                    <div class="col-span-5 text-right">
-                        <p class="text-green-400 font-mono">+1,234.5678</p>
-                    </div>
-                </div>
-
-            </div>
+             <Transactions truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
+           
         </div>
-        <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700">
-            <h3 class="text-lg font-semibold text-white mb-2">Sub Accounts</h3>
-            
-            <div class="space-y-4">
-                <div class="grid grid-cols-12 items-center gap-4 p-1 hover:bg-gray-700 rounded">
-
-                    <div class="col-span-1 credit-card w-10 h-10">
-                  <img 
-                    src={CreditCard} alt="Credit card"
-                    loading="lazy"
-                />
-                    </div>
-                    <div class="col-span-3 min-w-0">
-                        <h3 class="font-medium text-white truncate">Mada Card</h3>
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-gray-300">0x89d...0359</span>
-                            {/* <i data-lucide="copy" class="w-3 h-3 text-gray-400 hover:text-secondary cursor-pointer" 
-                               onclick="copyToClipboard('0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359')"></i> */}
-                        </div>
-                        <p class="text-xs text-gray-300 mt-1">**** 1234</p>
-                    </div>
-                    <div class="col-span-5 flex items-center">
-                        <div class="text-center">
-                            <div class="flex items-center gap-1 justify-end">
-                                <p class="text-xs text-gray-300">Allowance</p>
-                                <button class="text-gray-400 hover:text-secondary p-1">
-                                    {/* <i data-lucide="edit-2" class="w-3 h-3"></i> */}
-                                </button>
-                            </div>
-                            <p class="font-medium text-white">10,000.0000</p>
-                        </div>
-                        <div class="text-center ml-4">
-                            <div class="flex items-center gap-1 justify-end">
-                                <p class="text-xs text-gray-300">Transaction Limit</p>
-                                <button class="text-gray-400 hover:text-secondary p-1">
-                                    {/* <i data-lucide="edit-2" class="w-3 h-3"></i> */}
-                                </button>
-                            </div>
-                            <p class="font-medium text-white">5,000.0000</p>
-                        </div>
-                        <div class="text-center ml-4">
-                            <div class="flex items-center gap-1 justify-end">
-                                <p class="text-xs text-gray-300">Next Tx Allowance</p>
-                                <button class="text-gray-400 hover:text-secondary p-1">
-                                    {/* <i data-lucide="edit-2" class="w-3 h-3"></i> */}
-                                </button>
-                            </div>
-                            <p class="font-medium text-white">Not set</p>
-                        </div>
-                    </div>
-                    <div class="col-span-3 text-right">
-                        <button id="subAccount1Pay" class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">Pay</button>
-                        <button class="ml-4 text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">
-                            Transactions
-                        </button>
-                    </div>
-
-
-
-
-                </div>
-                
-                <div class="grid grid-cols-12 items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                    <div class="col-span-1 w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
-                        <i data-lucide="user" class="w-5 h-5 text-secondary"></i>
-                    </div>
-                    <div class="col-span-3 min-w-0">
-                        <h3 class="font-medium text-white truncate">Junior</h3>
-                        <div class="flex items-center gap-1">
-                            <span class="text-xs text-gray-300">0x2f3...C970</span>
-                            {/* <i data-lucide="copy" class="w-3 h-3 text-gray-400 hover:text-secondary cursor-pointer" 
-                               onclick="copyToClipboard('0x2f318C334780961FB129D2a6c30D0763d9a5C970')"></i> */}
-                        </div>
-                    </div>
-                    <div class="col-span-5 flex items-center">
-                        <div class="text-right">
-                            <div class="flex items-center gap-1 justify-end">
-                                <p class="text-xs text-gray-300">Allowance</p>
-                                <button class="text-gray-400 hover:text-secondary p-1">
-                                    <i data-lucide="edit-2" class="w-3 h-3"></i>
-                                </button>
-                            </div>
-                            <p class="font-medium text-white">8,500.0000</p>
-                        </div>
-                        <div class="text-right ml-4">
-                            <div class="flex items-center gap-1 justify-end">
-                                <p class="text-xs text-gray-300">Transaction Limit</p>
-                                <button class="text-gray-400 hover:text-secondary p-1">
-                                    <i data-lucide="edit-2" class="w-3 h-3"></i>
-                                </button>
-                            </div>
-                            <p class="font-medium text-white">4,000.0000</p>
-                        </div>
-                        <div class="text-center ml-4">
-                            <div class="flex items-center gap-1 justify-end">
-                                <p class="text-xs text-gray-300">Next Tx Allowance</p>
-                                <button class="text-gray-400 hover:text-secondary p-1">
-                                    <i data-lucide="edit-2" class="w-3 h-3"></i>
-                                </button>
-                            </div>
-                            <p class="font-medium text-white justify-end">Not set</p>
-                        </div>
-                    </div>
-                    <div class="col-span-3 text-right">
-                        <button id="subAccount2Pay" class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">Pay</button>
-                        <button class="ml-4 text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">
-                            Transactions
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-12 items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                    <div class="col-span-1 group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" >
-                        {/* <i data-lucide="plus" class="w-5 h-5 text-gray-500 group-hover:text-secondary"></i> */}
-                    </div>
-                    <div class="col-span-11 flex-1 min-w-0">
-                        <h3 class="font-medium text-gray-400 group-hover:text-secondary">Add New Sub Account</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {/* <SubAccounts></SubAccounts> */}
     </div>
   );
 }
