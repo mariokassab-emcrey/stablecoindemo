@@ -27,11 +27,26 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #2596be;
+  
+}
+.table {border: none;
+border-collapse: collapse;}
+.tr, td {
+    border-bottom: none;
+}
 
 .App-link {
   color: #61dafb;
 }
-
+.td-home{
+   border-bottom: none;
+}
+.file { border: none; }
+.noBorder {
+    border:none !important;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

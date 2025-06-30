@@ -58,7 +58,7 @@ useEffect(() => {
 
   return (
     <div>
-      <button  class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}>Account Book</button>
+      <button style={{marginBottom:'15px'}}  class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}>Account Book</button>
       <dialog ref={dialogRef}>
         <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
 
