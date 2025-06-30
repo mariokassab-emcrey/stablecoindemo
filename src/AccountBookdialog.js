@@ -3,6 +3,7 @@ import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
+import { Pointer,Delete,Plus,X,BookAIcon } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([{Address:'0x78d5c26b123fac0b77f7cd7e864909c8ccf72ae0',Name:'marie',Amount:0.2,ID:null},{Address:'0x78d5c26b144fac0b77f7cd7e864909c8ccf72ae0',Name:'Laurence',Amount:0.3,ID:null}]);
@@ -58,7 +59,7 @@ useEffect(() => {
 
   return (
     <div>
-      <button style={{marginBottom:'15px'}}  class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}>Account Book</button>
+      <button style={{marginBottom:'15px'}}  class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}><BookAIcon/></button>
       <dialog ref={dialogRef}>
         <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
 
@@ -66,7 +67,8 @@ useEffect(() => {
                                 <div class="flex items-center gap-4">
                                     <h1 class="text-3xl font-bold text-white">Accounts</h1>
                                 </div>
-                              
+                                <div class="text-right"> <Button className='Danger-button' variant='danger' onClick={closeDialog}><X/></Button></div>
+                             
                             </div>
 
                             <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
@@ -78,7 +80,7 @@ useEffect(() => {
                 <tr>
                   <th className="th-home">Account</th>
                   <th className="th-home">Name</th>
-                  <th className="th-home">Amount</th>
+                  {/* <th className="th-home">Amount</th> */}
                 <th className="th-home">Actions</th>
                 </tr>
               </thead>
@@ -93,13 +95,13 @@ useEffect(() => {
                         <td className="td-home">
                           {account.Name}
                         </td>
-                        <td className="td-home">
+                        {/* <td className="td-home">
                           {account.Amount}
-                        </td> 
+                        </td>  */}
                          
                         <td style={{width:'200px'}}>
                           <Row style={{paddingLeft:'25px'}}> <Button  variant='primary' onClick={()=>{props.fillAccountDetails(account)
-                          closeDialog()}}>Choose</Button>
+                          closeDialog()}}><Pointer/></Button>
 <div style={{width:'10px',height:'10px'}}></div>
                           <Button variant='danger' onClick={async ()=>{
                             
@@ -108,7 +110,7 @@ useEffect(() => {
 
                           // AccountBook.splice(index,1)
                             // setAccountBook([...AccountBook]);
-                            }}>Delete</Button>
+                            }}><Delete/></Button>
                             </Row>
                           </td>    
                         
@@ -153,7 +155,7 @@ useEffect(() => {
                 ></Form.Control>
               </Form.Group>
                                                 </Col>
-                                                <Col> <Form.Group controlId="Amount">
+                                                {/* <Col> <Form.Group controlId="Amount">
                 <Form.Label className="FormLabel">
                   Amount
                 </Form.Label>
@@ -164,9 +166,9 @@ useEffect(() => {
                  
                 ></Form.Control>
               </Form.Group>
-                                                </Col>
+                                                </Col> */}
                                                 <Col><Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="submitBook" type='submit' >
-                                        Add
+                                        <Plus/>
                                     </Button></Col>
                                             </Row>
                                             <br></br>
@@ -176,9 +178,7 @@ useEffect(() => {
                                     </Col> */}
                                 {/* </div> */}
                             {/* </div> */}
-                             <Col dir='LTR' sm='3'>
-                             <Button className='Danger-button' variant='danger' onClick={closeDialog}>Close</Button>
-                             </Col>
+                            
                        </Row>
                                           </Form>
                                           </div>

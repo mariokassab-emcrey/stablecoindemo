@@ -5,6 +5,7 @@ import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import AccountBookDialog from './AccountBookdialog.js';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
+import { X,Check } from 'lucide-react';
 function PayDialog(props) {
   const dialogRef = useRef(null);
   const [balance, setBalance] = useState(0);
@@ -82,10 +83,12 @@ try {
 
                             {/* <!-- Title bar --> */}
                             <div class="flex justify-between items-center mb-8">
-                                <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-4 text-right">
                                     <h1 class="text-3xl font-bold text-white">Pay</h1>
                                 </div>
-                              
+                              <div >
+                                <Button variant='danger' onClick={closeDialog}><X/></Button>
+                              </div>
                             </div>
 
                             {/* <!-- Account Info Panel --> */}
@@ -160,12 +163,10 @@ try {
                                             <Row sm={2} >
                                     <Col lg='9'>
                                     <Button id="payDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="/submitPay" type='submit' >
-                                        Confirm
+<Check></Check>
                                     </Button>
                                     </Col>
-                             <Col dir='LTR' sm='3'>
-                             <Button className='Danger-button' variant='danger' onClick={closeDialog}>Cancel</Button>
-                             </Col>
+                            
                        </Row>
                                           </Form>
                                          
