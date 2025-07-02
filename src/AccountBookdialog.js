@@ -6,7 +6,7 @@ import { db } from "./firebaseConfig";
 import { Pointer,Delete,Plus,X,BookAIcon } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
-  const [AccountBook, setAccountBook] = useState([{Address:'0x78d5c26b123fac0b77f7cd7e864909c8ccf72ae0',Name:'marie',Amount:0.2,ID:null},{Address:'0x78d5c26b144fac0b77f7cd7e864909c8ccf72ae0',Name:'Laurence',Amount:0.3,ID:null}]);
+  const [AccountBook, setAccountBook] = useState([]);
  
   const openDialog = () => {
   
@@ -24,6 +24,7 @@ async function handleSubmit(event) {
     Address: event.target.Address.value,
     Name: event.target.Name.value,
     Amount: event.target.Amount.value,
+    MainAccount : props.mainAccount
   };
   try {
       
@@ -46,13 +47,15 @@ useEffect(() => {
     const fetchMenu = async () => {
       const menuCollection = await getDocs(collection(db, "Book"));
        console.log("menuCollection.docs"+menuCollection.docs[0].id)
-      const fullMenu = menuCollection.docs.map((doc) => ({
+      const Addresses = menuCollection.docs.map((doc) => ({
        ID:doc.id,
         Address: doc.data().Address,
         Amount: doc.data().Amount,
         Name: doc.data().Name,
+        MainAccount:doc.data().MainAccount,
       }));
-      setAccountBook(fullMenu);
+     
+      setAccountBook(Addresses);
     };
     fetchMenu();
   }, []);
@@ -88,6 +91,7 @@ useEffect(() => {
                 <tbody>
                   {AccountBook.map(
                     (account, index) => (
+                    account.MainAccount === props.mainAccount ? 
                       <tr key={index}>
                         <td className="td-home">
                           {account.Address}
@@ -115,6 +119,7 @@ useEffect(() => {
                           </td>    
                         
                       </tr>
+                      : null
                     )
                   )}
                 </tbody>

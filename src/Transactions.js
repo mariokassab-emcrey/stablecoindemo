@@ -52,6 +52,7 @@ useEffect(() => {
                 <tbody className="noBorder">
                   {Transactions.map(
                     (transaction, index) => (
+                       transaction.From === props.account ?
                       <tr className="noBorder" key={index}>
                         <td className="noBorder">
                        <div class="col-span-1 w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
@@ -90,7 +91,7 @@ useEffect(() => {
                             }
                         
                           </td>    
-                      </tr>
+                      </tr>:null
                     )
                   )}
                 </tbody>

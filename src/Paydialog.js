@@ -158,7 +158,7 @@ try {
                             </div>
 
                          
-                                          <AccountBookDialog fillAccountDetails={(account)=>{setAddress(account.Address)
+                                          <AccountBookDialog mainAccount={props.account} fillAccountDetails={(account)=>{setAddress(account.Address)
                                                   setAmount(account.Amount)
                                                   setName(account.Name)
                                                 }}></AccountBookDialog>

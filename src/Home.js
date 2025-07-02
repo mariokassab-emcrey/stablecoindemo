@@ -265,7 +265,7 @@ const metaMaskAccount = metaMaskAccounts[0];
                     Show All
                 </button>
             </div>
-             <Transactions truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
+             <Transactions account={account} truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
            
         </div>
         {/* <SubAccounts></SubAccounts> */}
