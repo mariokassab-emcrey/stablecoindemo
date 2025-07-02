@@ -12,8 +12,9 @@ function Home() {
   // Declare a state variable to hold the input's value
   const [inputValue, setInputValue] = useState('');
   const [account, setAccount] = useState('');
-  const [balance, setBalance] = useState('');
-    const [gasFees, setGasfees] = useState('');
+  const [balance, setBalance] = useState('0');
+    const [gasFees, setGasfees] = useState('0');
+    const [Status, setStatus] = useState();
   // Event handler to update the state when the input changes
   const handleChange = (event) => {
     setInputValue(event.target.value);
@@ -32,7 +33,55 @@ async function copyTextToClipboard(text) {
     console.error('Failed to copy text: ', err);
   }
 }
+
+
+
+
+
+async function getBalance() {
+  try {
+    const erc20iAbi = [
+      // Some details about the token
+      "function name() view returns (string)",
+      "function symbol() view returns (string)",
+      // Get the account balance
+      "function balanceOf(address) view returns (uint)",
+      // Send some of your tokens to someone else
+      "function transfer(address to, uint amount)",
+      // An event triggered whenever anyone transfers to someone else
+      "event Transfer(address indexed from, address indexed to, uint amount)"
+    ];
+const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/782de316e7de460cb85dcc3d5feb17e4');
+
+    // const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
+    const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
+    const metaMaskAccount = metaMaskAccounts[0];
+console.log("metaMaskAccount"+metaMaskAccount);
+    const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
+    const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, provider);
+console.log("before getting the balance"); // Add this line to see if the balance is being fetched
+const balance = await Promise.race([
+  provider.getBalance(metaMaskAccount),
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000))
+]);
+
+
+    // const balance = await provider.getBalance(metaMaskAccount);
+    console.log("Balance:", balance); // Add this line to see if the balance is being fetched
+    const newGasBalance = ethers.formatUnits(balance, 18);
+    setGasfees(newGasBalance);
+
+    const contractBalance = await readStablecoinContract.balanceOf(metaMaskAccount);
+     
+    const newSCBalance = ethers.formatUnits(contractBalance, 18);
+    setBalance(newSCBalance);
+  } catch (error) {
+    console.error("Error fetching balance:", error);
+  }
+}
+
 async function getBalance(){
+    console.log("checking the balance")
     const erc20iAbi = [
   // Some details about the token
   "function name() view returns (string)",
@@ -54,42 +103,42 @@ var gasBalance = 0;
         var scBalance = 0;
         const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
 const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, provider);
-   await    provider.getBalance(metaMaskAccount).then((balance) => {
+   await provider.getBalance(metaMaskAccount).then((balance) => {
         
           const element = document.getElementById("balanceETH");
-          const elementPay = document.getElementById("payBalanceETH");
+        //   const elementPay = document.getElementById("payBalanceETH");
           const newGasBalance = ethers.formatUnits(balance, 18);
           element.innerText = newGasBalance;
-          elementPay.innerText = newGasBalance;
+          
+        //   elementPay.innerText = newGasBal
+        // ance;
           
           //blink: green:increase, red:decrease, gray:unchanged 
-          element.classList.remove('text-gray-300');
-          elementPay.classList.remove('text-gray-300');
+          element.classList.remove('text-white');
+        //   elementPay.classList.remove('text-gray-300');
           if (gasBalance == newGasBalance) {
              element.classList.add('text-gray-500');
-             elementPay.classList.add('text-gray-500');
+            //  elementPay.classList.add('text-gray-500');
           } else
           if (gasBalance < newGasBalance) {
              element.classList.add('text-green-500');
-             elementPay.classList.add('text-green-500');
+            //  elementPay.classList.add('text-green-500');
           } else
           if (gasBalance > newGasBalance) {
              element.classList.add('text-red-500');
-             elementPay.classList.add('text-red-500');
+            //  elementPay.classList.add('text-red-500');
           }
           gasBalance = newGasBalance;
-          console.log("newGasBalance"+newGasBalance)
-          setGasfees(newGasBalance)
           // reset after 750ms
-          setTimeout(function() {
+          setTimeout(()=> {
              element.classList.remove('text-gray-500');
              element.classList.remove('text-green-500');
              element.classList.remove('text-red-500');
-             element.classList.add('text-gray-300');
-             elementPay.classList.remove('text-gray-500');
-             elementPay.classList.remove('text-green-500');
-             elementPay.classList.remove('text-red-500');
-             elementPay.classList.add('text-gray-300');
+             element.classList.add('text-white');
+            //  elementPay.classList.remove('text-gray-500');
+            //  elementPay.classList.remove('text-green-500');
+            //  elementPay.classList.remove('text-red-500');
+            //  elementPay.classList.add('text-gray-300');
           }, 750);
        }).catch((error) => 
           { console.error(
@@ -99,25 +148,25 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
     
       await readStablecoinContract.balanceOf(metaMaskAccount).then((balance) => {
           const element = document.getElementById("balanceSC")
-          const elementPay = document.getElementById("payBalanceSC")
+        //   const elementPay = document.getElementById("payBalanceSC")
           var newSCBalance = ethers.formatUnits(balance, 18);
           element.innerText = newSCBalance;
-          elementPay.innerText = newSCBalance;
+        //   elementPay.innerText = newSCBalance;
     setBalance(newSCBalance)
           //blink: green:increase, red:decrease, gray:unchanged 
-          element.classList.remove('text-primary');
-          elementPay.classList.remove('text-primary');
+          element.classList.remove('text-white');
+        //   elementPay.classList.remove('text-primary');
           if (scBalance == newSCBalance) {
              element.classList.add('text-gray-400');
-             elementPay.classList.add('text-gray-400');
+            //  elementPay.classList.add('text-gray-400');
           } else
           if (scBalance < newSCBalance) {
              element.classList.add('text-green-400');
-             elementPay.classList.add('text-green-400');
+            //  elementPay.classList.add('text-green-400');
           } else
           if (scBalance > newSCBalance) {
              element.classList.add('text-red-400');
-             elementPay.classList.add('text-red-400');
+            //  elementPay.classList.add('text-red-400');
           }
           scBalance = newSCBalance;
 
@@ -126,11 +175,11 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
              element.classList.remove('text-gray-400');
              element.classList.remove('text-green-400');
              element.classList.remove('text-red-400');
-             element.classList.add('text-primary');
-             elementPay.classList.remove('text-gray-400');
-             elementPay.classList.remove('text-green-400');
-             elementPay.classList.remove('text-red-400');
-             elementPay.classList.add('text-primary');
+             element.classList.add('text-white');
+            //  elementPay.classList.remove('text-gray-400');
+            //  elementPay.classList.remove('text-green-400');
+            //  elementPay.classList.remove('text-red-400');
+            //  elementPay.classList.add('text-primary');
           }, 750);
        }).catch((error) => 
           { console.error(
@@ -138,14 +187,25 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
               Code: ${error.code}. Data: ${error.data}`);
           });
     }
+    const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
+    provider.on('block', (blockNumber) => { getBalance(); });
   useEffect(() => {getBalance()})
+  function getCurrentDate(separator=''){
+
+let newDate = new Date()
+let date = newDate.getDate();
+let month = newDate.getMonth() + 1;
+let year = newDate.getFullYear();
+
+return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`
+}
   return (
      <div>
       <div class="flex justify-between items-center mb-8" style={{margin:'15px'}}>
             <div class="flex items-center gap-4">
                 <h1 class="text-3xl font-bold text-white">SAR Wallet</h1>
                
-                <span id="date" class="text-gray-300">Today, June 15, 2023</span>
+                <span  class="text-gray-300">{new Date().toDateString()}</span>
             </div>
             
             <div class="flex items-center gap-3">
@@ -179,7 +239,7 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
                         <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                     </div>
                     <div class="self-center">
-                       <PayDialog account={account} balance={balance} gasFees={gasFees}>                        
+                       <PayDialog setStatus={setStatus} account={account} balance={balance} gasFees={gasFees}>                        
                     </PayDialog>                    
                     </div>
                 </div>

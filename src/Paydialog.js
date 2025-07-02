@@ -3,7 +3,7 @@ import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import AccountBookDialog from './AccountBookdialog.js';
-import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
+import { collection, updateDoc,addDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { X,Check } from 'lucide-react';
 function PayDialog(props) {
@@ -55,23 +55,66 @@ async function handleSubmit(event) {
 ];
   const writeStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, signer);
   var valueDecimal18 = ethers.parseEther(event.target.Amount.value);
-   writeStablecoinContract.transfer(event.target.Address.value,valueDecimal18).then((balance) => {});
+  //  writeStablecoinContract.transfer(event.target.Address.value,valueDecimal18).then((balance) => {});
+   try {
+  const tx = await writeStablecoinContract.transfer(event.target.Address.value, valueDecimal18);
+  console.log(`Transaction hash: ${tx.hash}`);
+
+  const receipt = await tx.wait();
+  props.setStatus('Pending')
+  const docref = await addTransaction('Pending');
+  console.log("docref"+docref)
+  console.log("docref.id"+docref.id)
+  if (receipt.status === 1) {
+props.setStatus('Success')
+updateTransaction('Success',docref.id)
+    console.log("Transaction successful!");
+  } else {
+    console.log("Transaction failed!");
+   updateTransaction('Failed',docref.id)
+  }
+} catch (error) {
+  console.error("Error sending transaction:", error);
+}
+async function updateTransaction(status,id){
 try {
       const transaction ={
         From:props.account,
         Name:event.target.Reference.value,
         To:event.target.Address.value,
         Amount:event.target.Amount.value,
-        TransactionDateTime:new Date()
+        TransactionDateTime:new Date(),
+        Status:status
       }
-      await addDoc(collection(db, "Transaction"), transaction);
-      alert("Order placed successfully!");
-      
+       await updateDoc(id, transaction);
+      alert("Updated successfully!");
+    
       // ✅ Redirect back to menu after successful order
       window.location.href = "/";
     } catch (error) {
       console.error("Error placing order: ", error);
       alert("Failed to place order.");
+    }
+    }
+async function addTransaction(status){
+try {
+      const transaction ={
+        From:props.account,
+        Name:event.target.Reference.value,
+        To:event.target.Address.value,
+        Amount:event.target.Amount.value,
+        TransactionDateTime:new Date(),
+        Status:status
+      }
+      return await addDoc(collection(db, "Transaction"), transaction);
+      alert("Order placed successfully!");
+    
+      // ✅ Redirect back to menu after successful order
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error placing order: ", error);
+      alert("Failed to place order.");
+    }
     }
 }
   return (

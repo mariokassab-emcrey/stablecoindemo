@@ -23,6 +23,7 @@ useEffect(() => {
         Amount:  doc.data().Amount,
         TransactionDateTime : (new Date(doc.data().TransactionDateTime.seconds * 1000)).toString(),
         Type:doc.data().Type,
+        Status:doc.data().Status
         
       }));
       console.log(transactions.length)
@@ -74,14 +75,19 @@ useEffect(() => {
                   <Copy size={12}/>
                 </button>
                         </td> */}
-                        
+                         <td className="noBorder">
+                          <h2 style={transaction.Status === 'Pending' ? {color:'#fa8237'}:{color:'red'}}>{transaction.Status}</h2>
+                          </td>  
                         <td className="noBorder">
                           <h2>{transaction.TransactionDateTime.slice(0,15)}</h2>
                           <p>{transaction.TransactionDateTime.slice(15,25)}</p>
                           </td>    
                         <td className="noBorder">
-                          
-                            <h2  style={{fontSize:'24px',}}  class={transaction.Type === 'Pay' ? "text-red-400 font-mono text-right" : "text-green-400 font-mono text-right"}>{transaction.Amount}</h2>
+                          {transaction.Type === 'Pay' ? 
+                            <h2  style={{fontSize:'24px',}}  class="text-red-400 font-mono text-right">-{transaction.Amount}</h2>
+                            :
+                            <h2  style={{fontSize:'24px',}}  class="text-green-400 font-mono text-right">+{transaction.Amount}</h2>
+                            }
                         
                           </td>    
                       </tr>
