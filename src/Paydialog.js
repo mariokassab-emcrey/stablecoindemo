@@ -5,7 +5,7 @@ import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import AccountBookDialog from './AccountBookdialog.js';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { X,Check } from 'lucide-react';
+import { X,Check,SquareX } from 'lucide-react';
 function PayDialog(props) {
   const dialogRef = useRef(null);
   const [balance, setBalance] = useState(0);
@@ -76,20 +76,20 @@ try {
 }
   return (
     <div>
-      <button class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}>Pay</button>
+      <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>Pay</button>
       <dialog ref={dialogRef}>
         {/* <h2>Dialog Title</h2> */}
         <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
 
-                            {/* <!-- Title bar --> */}
-                            <div class="flex justify-between items-center mb-8">
-                                <div class="flex items-center gap-4 text-right">
-                                    <h1 class="text-3xl font-bold text-white">Pay</h1>
-                                </div>
-                              <div >
-                                <Button variant='danger' onClick={closeDialog}><X/></Button>
-                              </div>
-                            </div>
+          {/* <!-- Title bar --> */}
+          <div class="flex justify-between items-center mb-8">
+              <div class="flex items-center gap-4 text-right">
+                  <h1 class="text-3xl font-bold text-white">Pay</h1>
+              </div>
+            <div >
+              <SquareX class="text-gray-300 hover:text-secondary p-1 hover:bg-gray-700 transition-colors w-7 h-7" onClick={closeDialog}/>
+            </div>
+          </div>
 
                             {/* <!-- Account Info Panel --> */}
                             <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
@@ -124,7 +124,7 @@ try {
                                                 <Col>
                                                 <Form.Group controlId="Address">
                 <Form.Label className="FormLabel">
-                  Address<font COLOR="#ff0000">*</font>
+                  Address<font color="#ff0000">*</font>
                 </Form.Label>
                 <Form.Control
                   type="float"
@@ -137,7 +137,7 @@ try {
                                                 </Col>
                                                 <Col> <Form.Group controlId="Amount">
                 <Form.Label className="FormLabel">
-                  Amount<font COLOR="#ff0000">*</font>
+                  Amount<font color="#ff0000">*</font>
                 </Form.Label>
                 <Form.Control
                   type="float"

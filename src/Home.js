@@ -3,35 +3,44 @@ import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import EmcreyLogo from './images/emcrey-logo.png'
 import Transactions from './Transactions.js'
 
-
 import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 import PayDialog from './Paydialog.js'
 import AccountBookDialog from './AccountBookdialog.js';
 import SubAccounts from './SubAccounts.js';
+
+import { Settings } from 'lucide-react';
+
+
 function Home() {
-  // Declare a state variable to hold the input's value
-  const [inputValue, setInputValue] = useState('');
-  const [account, setAccount] = useState('');
-  const [balance, setBalance] = useState('');
+    // Declare a state variable to hold the input's value
+    const [inputValue, setInputValue] = useState('');
+    const [account, setAccount] = useState('');
+    const [balance, setBalance] = useState('');
     const [gasFees, setGasfees] = useState('');
-  // Event handler to update the state when the input changes
-  const handleChange = (event) => {
-    setInputValue(event.target.value);
-  };
-  function truncateEthAddress(address) {
-  var truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
-    var match = address.match(truncateRegex);
-    if (!match)
-        return address;
-    return match[1] + "\u2026" + match[2];
-};
-async function copyTextToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (err) {
-    console.error('Failed to copy text: ', err);
-  }
-}
+    // Event handler to update the state when the input changes
+    const handleChange = (event) => {
+        setInputValue(event.target.value);
+    };
+
+    // temp var for Addressbook dialog
+    var props;
+
+    function truncateEthAddress(address) {
+        var truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
+        var match = address.match(truncateRegex);
+        if (!match) return address;
+        return match[1] + "\u2026" + match[2];
+    };
+
+    async function copyTextToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+        } 
+        catch (err) {
+        console.error('Failed to copy text: ', err);
+        }
+    }
+
 async function getBalance(){
     const erc20iAbi = [
   // Some details about the token
@@ -47,21 +56,25 @@ async function getBalance(){
   // An event triggered whenever anyone transfers to someone else
   "event Transfer(address indexed from, address indexed to, uint amount)"
 ];
-    const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
-    const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
+const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
+const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
+const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
+const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, provider);
+
 const metaMaskAccount = metaMaskAccounts[0];
 var gasBalance = 0;
-        var scBalance = 0;
-        const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
-const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, provider);
-   await    provider.getBalance(metaMaskAccount).then((balance) => {
+var scBalance = 0;
+
+await provider.getBalance(metaMaskAccount).then((balance) => {
         
           const element = document.getElementById("balanceETH");
           const elementPay = document.getElementById("payBalanceETH");
           const newGasBalance = ethers.formatUnits(balance, 18);
           element.innerText = newGasBalance;
           elementPay.innerText = newGasBalance;
-          
+
+          var props = "";
+
           //blink: green:increase, red:decrease, gray:unchanged 
           element.classList.remove('text-gray-300');
           elementPay.classList.remove('text-gray-300');
@@ -139,23 +152,23 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
           });
     }
   useEffect(() => {getBalance()})
+
   return (
      <div>
       <div class="flex justify-between items-center mb-8" style={{margin:'15px'}}>
             <div class="flex items-center gap-4">
                 <h1 class="text-3xl font-bold text-white">SAR Wallet</h1>
-               
                 <span id="date" class="text-gray-300">Today, June 15, 2023</span>
             </div>
             
             <div class="flex items-center gap-3">
+                <Settings class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"/>
+                {/*
                 <button class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors">
-             
+                    <Settings/>
                 </button>
-                <img 
-                    src={EmcreyLogo} alt="eMcREY Logo"
-                    loading="lazy"
-                />
+                */}
+                <img src={EmcreyLogo} alt="eMcREY Logo" loading="lazy" />
             </div>
         </div>
         
@@ -167,7 +180,6 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
                         <h2 class="text-lg font-semibold text-white">Account</h2>
                         <div class="flex items-center gap-1 mt-1">
                            <MetaMaskLogin truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} fillAccount={(account)=>{setAccount(account)}}></MetaMaskLogin>
-                        
                         </div>
                     </div>
                     <div class="self-center">
@@ -179,11 +191,13 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
                         <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                     </div>
                     <div class="self-center">
-                       <PayDialog account={account} balance={balance} gasFees={gasFees}>                        
-                    </PayDialog>                    
+                       <PayDialog account={account} balance={balance} gasFees={gasFees}/>                        
+                    </div>
+                    <div class="self-center">
+                        <AccountBookDialog fillAccountDetails={props}/>
                     </div>
                 </div>
-                <button class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">
+                <button class="text-sm font-medium text-button hover:text-white hover:bg-gray-700 px-3 py-1 rounded  transition-colors border border-button focus:outline-none">
                     Change Account
                 </button>
             </div>            
@@ -193,20 +207,19 @@ const readStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, p
                 <h3 class="text-lg font-semibold text-white">Transactions</h3>
                 <button 
                     id="showAllBtn"
-                    class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={async ()=>{
-                     const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
-                     const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
-    const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
-const metaMaskAccount = metaMaskAccounts[0];
-                      var url = "https://sepolia.etherscan.io/token/"+contractAddress+"?a="+metaMaskAccount;
-      // 0x1286cc47a092e5927c0b7e54ff5cc1a22da46408
-      window.open(url, '_blank');
-                    }}>
-                    Show All
+                    class="text-sm font-medium text-button hover:text-white hover:bg-gray-700 px-3 py-1 rounded  transition-colors border border-button focus:outline-none" onClick={async ()=>
+                        {
+                            const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
+                            const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
+                            const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
+                            const metaMaskAccount = metaMaskAccounts[0];
+                            var url = "https://sepolia.etherscan.io/token/"+contractAddress+"?a="+metaMaskAccount;
+                            window.open(url, '_blank');
+                        }}>
+                        Show All
                 </button>
             </div>
              <Transactions truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
-           
         </div>
         {/* <SubAccounts></SubAccounts> */}
     </div>

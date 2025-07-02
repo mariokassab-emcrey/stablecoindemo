@@ -35,14 +35,18 @@ function MetaMaskLogin(props) {
   return (
     <div style={{color: 'White'}}>
       {providerDetected ? (
-        account ? (<div style={{display:'flex'}}>
-          <p style={{paddingRight:'10px'}} class="text-lg font-semibold text-white">Connected account: {props.truncateEthAddress(account)} </p>
-         <button onClick={()=>props.copyTextToClipboard(account)} >
-                  <Copy size={12}/>
-                </button>
-          
+        account ? (
+          <div style={{display:'flex'}}>
+            <p style={{paddingRight:'10px'}} class="text-sm text-gray-300">{props.truncateEthAddress(account)} </p>
+            <Copy size={12} onClick={()=>props.copyTextToClipboard(account)}/>
+            {/* 
+            <button onClick={()=>props.copyTextToClipboard(account)} >
+              <Copy size={12}/>
+            </button>
+            */}
           </div>
-        ) : (
+        ) 
+        : (
           <p class="text-lg font-semibold text-white">Connecting to MetaMask...</p>
         )
       ) : (
