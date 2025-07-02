@@ -81,7 +81,6 @@ const balance = await Promise.race([
 }
 
 async function getBalance(){
-    console.log("checking the balance")
     const erc20iAbi = [
   // Some details about the token
   "function name() view returns (string)",

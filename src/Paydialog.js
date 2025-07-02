@@ -61,18 +61,21 @@ async function handleSubmit(event) {
   console.log(`Transaction hash: ${tx.hash}`);
 
   const receipt = await tx.wait();
-  props.setStatus('Pending')
-  const docref = await addTransaction('Pending');
+  props.setStatus('Successful')
+  const docref = await addTransaction('Successful');
   console.log("docref"+docref)
   console.log("docref.id"+docref.id)
-  if (receipt.status === 1) {
-props.setStatus('Success')
-updateTransaction('Success',docref.id)
-    console.log("Transaction successful!");
-  } else {
-    console.log("Transaction failed!");
-   updateTransaction('Failed',docref.id)
-  }
+  alert("Transaction successfully created");
+  window.location.reload(false);
+//   if (receipt.status === 1) {
+// props.setStatus('Success')
+// console.log("update will be intiated now!");
+// updateTransaction('Success',docref.id)
+    
+//   } else {
+//     console.log("Transaction failed!");
+//    updateTransaction('Failed',docref.id)
+//   }
 } catch (error) {
   console.error("Error sending transaction:", error);
 }
@@ -86,14 +89,13 @@ try {
         TransactionDateTime:new Date(),
         Status:status
       }
+      console.log("id"+id)
        await updateDoc(id, transaction);
-      alert("Updated successfully!");
+      alert("Transaction updated successfully!");
     
-      // ✅ Redirect back to menu after successful order
-      window.location.href = "/";
     } catch (error) {
-      console.error("Error placing order: ", error);
-      alert("Failed to place order.");
+      console.error("Error updating the transaction: ", error);
+      alert("Failed to update the transaction.");
     }
     }
 async function addTransaction(status){
@@ -107,13 +109,10 @@ try {
         Status:status
       }
       return await addDoc(collection(db, "Transaction"), transaction);
-      alert("Order placed successfully!");
     
-      // ✅ Redirect back to menu after successful order
-      window.location.href = "/";
     } catch (error) {
-      console.error("Error placing order: ", error);
-      alert("Failed to place order.");
+      console.error("Error Adding transaction: ", error);
+      alert("Failed Add the transaction.");
     }
     }
 }

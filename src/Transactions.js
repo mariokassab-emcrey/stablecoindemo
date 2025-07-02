@@ -77,7 +77,7 @@ useEffect(() => {
                 </button>
                         </td> */}
                          <td className="noBorder">
-                          <h2 style={transaction.Status === 'Pending' ? {color:'#fa8237'}:{color:'red'}}>{transaction.Status}</h2>
+                          <h2 style={transaction.Status === 'Pending' ? {color:'#fa8237'}:{color:'#6fde8d'}}>{transaction.Status}</h2>
                           </td>  
                         <td className="noBorder">
                           <h2>{transaction.TransactionDateTime.slice(0,15)}</h2>

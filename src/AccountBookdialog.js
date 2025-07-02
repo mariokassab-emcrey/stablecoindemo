@@ -23,7 +23,7 @@ async function handleSubmit(event) {
     
     Address: event.target.Address.value,
     Name: event.target.Name.value,
-    Amount: event.target.Amount.value,
+    
     MainAccount : props.mainAccount
   };
   try {
