@@ -134,7 +134,7 @@ try {
                                     <h1 class="text-3xl font-bold text-white">Pay</h1>
                                 </div>
                               <div >
-                                <Button variant='danger' onClick={closeDialog}><X/></Button>
+                              <SquareX class="text-gray-300 hover:text-secondary p-1 hover:bg-gray-700 transition-colors w-7 h-7" onClick={closeDialog} />
                               </div>
                             </div>
 

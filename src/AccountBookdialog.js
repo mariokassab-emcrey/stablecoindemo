@@ -3,7 +3,7 @@ import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Check,Copy,Plus,X,Trash2 } from 'lucide-react';
+import { Check,Copy,Plus,SquareX,Trash2 } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([]);
@@ -72,7 +72,9 @@ useEffect(() => {
                                 <div class="flex items-center gap-4">
                                     <h1 class="text-3xl font-bold text-white">Accounts</h1>
                                 </div>
-                                <div class="text-right"> <Button className='Danger-button' variant='danger' onClick={closeDialog}><X/></Button></div>
+                                <div class="text-right"> 
+                                <SquareX class="text-gray-300 hover:text-secondary p-1 hover:bg-gray-700 transition-colors w-7 h-7" onClick={closeDialog} />
+                                </div>
                              
                             </div>
 
