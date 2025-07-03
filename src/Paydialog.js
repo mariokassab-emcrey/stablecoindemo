@@ -6,6 +6,7 @@ import AccountBookDialog from './AccountBookdialog.js';
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { X, Check, SquareX } from 'lucide-react';
+import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 
 function PayDialog(props) {
   const dialogRef = useRef(null);
@@ -14,6 +15,8 @@ function PayDialog(props) {
   const [Address, setAddress] = useState();
   const [Name, setName] = useState();
   const [Amount, setAmount] = useState();
+  const [account, setAccount] = useState('');
+  
 
   const openDialog = () => {
     if (balance === 0) {
@@ -83,7 +86,7 @@ function PayDialog(props) {
       <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>Pay</button>
       <dialog ref={dialogRef}>
         {/* <h2>Dialog Title</h2> */}
-        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg noBorder">
 
           {/* <!-- Title bar --> */}
           <div class="flex justify-between items-center mb-8">
@@ -96,13 +99,13 @@ function PayDialog(props) {
           </div>
 
           {/* <!-- Account Info Panel --> */}
-          <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+          <div class="bg-card rounded-lg shadow-lg px-6 py-1 noBorder mb-6">
             <div class="flex justify-between items-center">
               <div class="flex gap-8">
                 <div class="self-center">
                   <h2 class="text-lg font-semibold text-white">Account</h2>
-                  <div style={{ color: 'white' }} class="flex items-center gap-1 mt-1">
-                    {props.account}
+                  <div class="flex items-center gap-1 mt-1">
+                    <MetaMaskLogin truncateEthAddress={props.truncateEthAddress} copyTextToClipboard={props.copyTextToClipboard} fillAccount={(account) => { setAccount(account) }}></MetaMaskLogin>
                   </div>
                 </div>
                 <div style={{ color: 'white' }} class="self-center">
@@ -124,7 +127,8 @@ function PayDialog(props) {
               setAddress(account.Address)
               setAmount(account.Amount)
               setName(account.Name)
-            }}>
+            }}
+            allowPay='true'>
           </AccountBookDialog>
 
           <Form style={{ color: 'white' }} onSubmit={handleSubmit}>
@@ -168,11 +172,10 @@ function PayDialog(props) {
             <br></br>
             <Row sm={2} >
               <Col lg='9'>
-                <Button id="payDialogPayBtn" class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="/submitPay" type='submit' >
-                  <Check></Check>
-                </Button>
+                <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" formAction="/submitPay" type='submit'>
+                  Make Payment
+                </button>
               </Col>
-
             </Row>
           </Form>
 

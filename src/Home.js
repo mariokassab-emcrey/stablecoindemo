@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import EmcreyLogo from './images/emcrey-logo.png'
 import Transactions from './Transactions.js'
-import truncateEthAddress from "./functions.js";
 import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 import PayDialog from './Paydialog.js'
 import AccountBookDialog from './AccountBookdialog.js';
@@ -205,7 +204,8 @@ function Home() {
                                     setAddress(account.Address)
                                     setAmount(account.Amount)
                                     setName(account.Name)
-                                }}>
+                                }}
+                                allowPay='false'>
                             </AccountBookDialog>
 
                         </div>

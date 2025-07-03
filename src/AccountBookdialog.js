@@ -111,13 +111,17 @@ function AccountBookDialog(props) {
                               <td style={{ width: '200px' }}>
                                 <Row style={{ paddingLeft: '25px' }}>
 
-                                  <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel transition-colors border border-button focus:outline-none"
-                                    onClick={() => {
-                                      props.fillAccountDetails(account)
-                                      closeDialog()
-                                    }}>
-                                    Pay
-                                  </button>
+                                  {props.allowPay === 'true' 
+                                    ? (
+                                        <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel bg-gray-700 transition-colors border border-button focus:outline-none"
+                                          onClick={() => {
+                                            props.fillAccountDetails(account)
+                                            closeDialog()
+                                          }}>
+                                          Pay
+                                        </button>
+                                    )
+                                    :(<div/>)}
 
                                   <div style={{ width: '10px', height: '10px' }}></div>
                                   <Trash2 class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
