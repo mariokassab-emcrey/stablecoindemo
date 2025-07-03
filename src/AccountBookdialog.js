@@ -30,7 +30,7 @@ async function handleSubmit(event) {
       
 
       await addDoc(collection(db, "Book"), newAccount);
-      alert("Order placed successfully!");
+      alert("Account Added successfully!");
       
       // ✅ Redirect back to menu after successful order
       window.location.href = "/";
@@ -92,6 +92,7 @@ useEffect(() => {
                       <tbody>
                         {AccountBook.map(
                           (account, index) => (
+                            account.MainAccount === props.mainAccount ? 
                             <tr key={index}>
                               <td>
                                 <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
@@ -137,7 +138,7 @@ useEffect(() => {
                                   </Trash2>
                                 </Row>
                               </td>
-                            </tr>
+                            </tr>:null
                           )
                         )}
                         <tr>
