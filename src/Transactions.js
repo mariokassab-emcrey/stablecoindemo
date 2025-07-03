@@ -65,10 +65,14 @@ useEffect(() => {
                         </td>
                         <td className="noBorder">
                           <h2 class="text-lg font-bold display: flex gap-1" style={{onHover:{color:'black'}}}>{transaction.Name}</h2>
-                           <div class="display: flex gap-1">
-                          {props.truncateEthAddress(transaction.From)}  <button onClick={()=>props.copyTextToClipboard(transaction.From)} >
-                  <Copy size={12}/>
-                </button>
+                           <div class="display: flex gap-1 text-gray-300">
+                            {transaction.Type === 'Pay' 
+                              ? props.truncateEthAddress(transaction.From)
+                              : props.truncateEthAddress(transaction.To)}
+                            <button class="focus:outline-none" onClick={
+                              () => { props.copyTextToClipboard(transaction.Type === 'Pay' ? transaction.From : transaction.To); }}>
+                              <Copy size={12}/>
+                            </button>
                 </div>
                         </td>
                         {/* <td className="noBorder">
@@ -85,9 +89,9 @@ useEffect(() => {
                           </td>    
                         <td className="noBorder">
                           {transaction.Type === 'Pay' ? 
-                            <h2  style={{fontSize:'24px',}}  class="text-red-400 font-mono text-right">-{transaction.Amount}</h2>
+                            <h2 class="text-red-400 text-m font-mono text-right">-{transaction.Amount}</h2>
                             :
-                            <h2  style={{fontSize:'24px',}}  class="text-green-400 font-mono text-right">+{transaction.Amount}</h2>
+                            <h2 class="text-green-400 test-m font-mono text-right">+{transaction.Amount}</h2>
                             }
                         
                           </td>    

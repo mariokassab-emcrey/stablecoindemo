@@ -235,10 +235,10 @@ return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}
                         <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                     </div>
                     <div class="self-center">
-                       <PayDialog truncateEthAddress={truncateEthAddress} account={account} balance={balance} gasFees={gasFees}/>                        
+                       <PayDialog truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} account={account} balance={balance} gasFees={gasFees}/>                        
                     </div>
                     <div class="self-center">
-                        <AccountBookDialog  truncateEthAddress={truncateEthAddress} mainAccount={account}/>
+                        <AccountBookDialog  truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} mainAccount={account}/>
                     </div>
                 </div>
               <button class="text-sm font-medium text-button hover:text-white hover:bg-gray-700 px-3 py-1 rounded  transition-colors border border-button focus:outline-none">
