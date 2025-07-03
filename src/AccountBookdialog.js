@@ -1,14 +1,14 @@
-import React, { useRef,useState,useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Table, Row } from "react-bootstrap";
 import './App.css';
-import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Plus,SquareX,Trash2,Check,Copy } from 'lucide-react';
+import { Plus, SquareX, Trash2, Check, Copy } from 'lucide-react';
 
-function AccountBookDialog(props) { 
+function AccountBookDialog(props) {
   const dialogRef = useRef(null);
-  const [AccountBook, setAccountBook] = useState([{Address:'0x78d5c26b123fac0b77f7cd7e864909c8ccf72ae0',Name:'marie',Amount:0.2,ID:null},{Address:'0x78d5c26b144fac0b77f7cd7e864909c8ccf72ae0',Name:'Laurence',Amount:0.3,ID:null}]);
- 
+  const [AccountBook, setAccountBook] = useState([{ Address: '0x78d5c26b123fac0b77f7cd7e864909c8ccf72ae0', Name: 'marie', Amount: 0.2, ID: null }, { Address: '0x78d5c26b144fac0b77f7cd7e864909c8ccf72ae0', Name: 'Laurence', Amount: 0.3, ID: null }]);
+
   const openDialog = () => {
     dialogRef.current.showModal(); // Opens the dialog
   };
@@ -26,25 +26,25 @@ function AccountBookDialog(props) {
     };
 
     try {
-        await addDoc(collection(db, "Book"), newAccount);
-        alert("Order placed successfully!");
-        
-        // ✅ Redirect back to menu after successful order
-        window.location.href = "/";
-      } catch (error) {
-        console.error("Error placing order: ", error);
-        alert("Failed to place order.");
-      }
-  // setAccountBook([...AccountBook, newAccount]);
+      await addDoc(collection(db, "Book"), newAccount);
+      alert("Order placed successfully!");
+
+      // ✅ Redirect back to menu after successful order
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error placing order: ", error);
+      alert("Failed to place order.");
+    }
+    // setAccountBook([...AccountBook, newAccount]);
 
   }
 
   useEffect(() => {
     const fetchMenu = async () => {
       const menuCollection = await getDocs(collection(db, "Book"));
-      console.log("menuCollection.docs"+menuCollection.docs[0].id)
+      console.log("menuCollection.docs" + menuCollection.docs[0].id)
       const fullMenu = menuCollection.docs.map((doc) => ({
-        ID:doc.id,
+        ID: doc.id,
         Address: doc.data().Address,
         Amount: doc.data().Amount,
         Name: doc.data().Name,
@@ -69,7 +69,7 @@ function AccountBookDialog(props) {
               <h1 class="text-3xl font-bold text-white">Addresses</h1>
             </div>
             <div class="text-right">
-              <SquareX class="text-gray-300 hover:text-secondary p-1 hover:bg-gray-700 transition-colors w-7 h-7" onClick={closeDialog}/>
+              <SquareX class="text-gray-300 hover:text-secondary p-1 hover:bg-gray-700 transition-colors w-7 h-7" onClick={closeDialog} />
             </div>
           </div>
 
@@ -77,89 +77,87 @@ function AccountBookDialog(props) {
           <div class="bg-card rounded-lg shadow-lg px-6 py-1 border-gray-700 mb-6">
             <div class="flex justify-between items-center">
               <div class="flex gap-8">
-                <Table className="mt-4" hover size="sm" style={{color:'white'}}>
-                <thead>
-                  <tr>
-                  </tr>
-                </thead>
-                {AccountBook.length !== 0 
-                ? (
-                  <tbody>
-                    {AccountBook.map(
-                      (account, index) => (
-                        <tr key={index}>
-                          <td>
-                            <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                              <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" onclick="">
-                                <Check class="w-5 h-5 text-green-700 "/>
-                              </div>
-                            </div>
-                          </td>
+                <Table className="mt-4" hover size="sm" style={{ color: 'white' }}>
+                  <thead>
+                    <tr>
+                    </tr>
+                  </thead>
+                  {AccountBook.length !== 0
+                    ? (
+                      <tbody>
+                        {AccountBook.map(
+                          (account, index) => (
+                            <tr key={index}>
+                              <td>
+                                <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                                  <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" onclick="">
+                                    <Check class="w-5 h-5 text-green-700 " />
+                                  </div>
+                                </div>
+                              </td>
 
-                          <td className="td-home">
-                            <div class="flex flex-col">
-                              <p class="text-lg font-bold">{account.Name}</p>
-                              <div class="display: flex gap-1 text-gray-300">
-                                {props.truncateEthAddress(account.Address)}  
-                                <button class="focus:outline-none" onClick={()=>props.copyTextToClipboard(account.Address)} >
-                                  <Copy size={12}/>
-                                </button>
-                              </div>
-                            </div>
-                          </td>
-                          
-                          <td style={{width:'200px'}}>
-                            <Row style={{paddingLeft:'25px'}}> 
+                              <td className="td-home">
+                                <div class="flex flex-col">
+                                  <p class="text-lg font-bold">{account.Name}</p>
+                                  <div class="display: flex gap-1 text-gray-300">
+                                    {props.truncateEthAddress(account.Address)}
+                                    <button class="focus:outline-none" onClick={() => props.copyTextToClipboard(account.Address)} >
+                                      <Copy size={12} />
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
 
-                              <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel transition-colors border border-button focus:outline-none"
-                                  onClick={()=>
-                                    {
+                              <td style={{ width: '200px' }}>
+                                <Row style={{ paddingLeft: '25px' }}>
+
+                                  <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel transition-colors border border-button focus:outline-none"
+                                    onClick={() => {
                                       props.fillAccountDetails(account)
                                       closeDialog()
                                     }}>
-                                Pay
-                              </button>
+                                    Pay
+                                  </button>
 
-                              <div style={{width:'10px',height:'10px'}}></div>
-                              <Trash2 class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
-                                onClick={async ()=>
-                                  {
-                                    await deleteDoc(doc(db, "Book", account.ID));
-                                    setAccountBook(AccountBook.filter((item) => item.ID !== account.ID));
-                                  }}>
-                              </Trash2>
-                            </Row>
-                          </td>    
+                                  <div style={{ width: '10px', height: '10px' }}></div>
+                                  <Trash2 class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
+                                    onClick={async () => {
+                                      await deleteDoc(doc(db, "Book", account.ID));
+                                      setAccountBook(AccountBook.filter((item) => item.ID !== account.ID));
+                                    }}>
+                                  </Trash2>
+                                </Row>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                        <tr>
+                          <td>
+                            <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                              <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
+                                <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary" />
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class=" flex-1 min-w-0">
+                              <h3 class="font-medium text-gray-400 group-hover:text-secondary">Add New Address</h3>
+                            </div>
+                          </td>
+                          <td></td>
                         </tr>
-                      )
-                    )}
-                    <tr>
-                      <td>
-                        <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                          <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
-                              <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary"/>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class=" flex-1 min-w-0">
-                            <h3 class="font-medium text-gray-400 group-hover:text-secondary">Add New Address</h3>
-                        </div>
-                      </td>     
-                      <td></td>               
-                    </tr>
 
-                  </tbody>
-                ) 
-                : (
-                  <tbody></tbody>
-                )}
+                      </tbody>
+                    )
+                    : (
+                      <tbody></tbody>
+                    )}
                 </Table>
               </div>
             </div>
           </div>
 
-{/*
+          {/*
           <Form style={{color : 'white'}} onSubmit={handleSubmit}>
             <Row>
                 <Col>
@@ -197,9 +195,9 @@ function AccountBookDialog(props) {
               </Row>
             </Form>
             */}
-          </div>
-                                    
-       
+        </div>
+
+
       </dialog>
     </div>
   );
