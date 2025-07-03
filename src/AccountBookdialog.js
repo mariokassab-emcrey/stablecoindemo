@@ -3,7 +3,7 @@ import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Pointer,Delete,Plus,X,BookAIcon } from 'lucide-react';
+import { Check,Copy,Plus,X,Trash2 } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([]);
@@ -62,7 +62,9 @@ useEffect(() => {
 
   return (
     <div>
-      <button style={{marginBottom:'15px'}}  class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}><BookAIcon/></button>
+      <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>
+        Address Book
+      </button>
       <dialog ref={dialogRef}>
         <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
 
@@ -78,55 +80,86 @@ useEffect(() => {
                                 <div class="flex justify-between items-center">
                                     <div class="flex gap-8">
                                        
-                                        <Table className="mt-4" striped bordered hover size="sm" style={{color:'white'}}>
-              <thead>
-                <tr>
-                  <th className="th-home">Account</th>
-                  <th className="th-home">Name</th>
-                  {/* <th className="th-home">Amount</th> */}
-                <th className="th-home">Actions</th>
-                </tr>
-              </thead>
-              {AccountBook.length !== 0 ? (
-                <tbody>
-                  {AccountBook.map(
-                    (account, index) => (
-                    account.MainAccount === props.mainAccount ? 
-                      <tr key={index}>
-                        <td className="td-home">
-                          {account.Address}
-                        </td>
-                        <td className="td-home">
-                          {account.Name}
-                        </td>
-                        {/* <td className="td-home">
-                          {account.Amount}
-                        </td>  */}
-                         
-                        <td style={{width:'200px'}}>
-                          <Row style={{paddingLeft:'25px'}}> <Button  variant='primary' onClick={()=>{props.fillAccountDetails(account)
-                          closeDialog()}}><Pointer/></Button>
-<div style={{width:'10px',height:'10px'}}></div>
-                          <Button variant='danger' onClick={async ()=>{
-                            
-                            await deleteDoc(doc(db, "Book", account.ID));
-  setAccountBook(AccountBook.filter((item) => item.ID !== account.ID));
+                                        <Table className="mt-4" hover size="sm" style={{ color: 'white' }}>
+                  <thead>
+                    <tr>
+                    </tr>
+                  </thead>
+                  {AccountBook.length !== 0
+                    ? (
+                      <tbody>
+                        {AccountBook.map(
+                          (account, index) => (
+                            <tr key={index}>
+                              <td>
+                                <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                                  <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" onclick="">
+                                    <Check class="w-5 h-5 text-green-700 " />
+                                  </div>
+                                </div>
+                              </td>
 
-                          // AccountBook.splice(index,1)
-                            // setAccountBook([...AccountBook]);
-                            }}><Delete/></Button>
-                            </Row>
-                          </td>    
-                        
-                      </tr>
-                      : null
+                              <td className="td-home">
+                                <div class="flex flex-col">
+                                  <p class="text-lg font-bold">{account.Name}</p>
+                                  <div class="display: flex gap-1 text-gray-300">
+                                    {props.truncateEthAddress(account.Address)}
+                                    <button class="focus:outline-none" onClick={() => props.copyTextToClipboard(account.Address)} >
+                                      <Copy size={12} />
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td style={{ width: '200px' }}>
+                                <Row style={{ paddingLeft: '25px' }}>
+
+                                  {props.allowPay === 'true' 
+                                    ? (
+                                        <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel bg-gray-700 transition-colors border border-button focus:outline-none"
+                                          onClick={() => {
+                                            props.fillAccountDetails(account)
+                                            closeDialog()
+                                          }}>
+                                          Pay
+                                        </button>
+                                    )
+                                    :(<div/>)}
+
+                                  <div style={{ width: '10px', height: '10px' }}></div>
+                                  <Trash2 class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
+                                    onClick={async () => {
+                                      await deleteDoc(doc(db, "Book", account.ID));
+                                      setAccountBook(AccountBook.filter((item) => item.ID !== account.ID));
+                                    }}>
+                                  </Trash2>
+                                </Row>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                        <tr>
+                          <td>
+                            <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                              <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
+                                <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary" />
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class=" flex-1 min-w-0">
+                              <h3 class="font-medium text-gray-400 group-hover:text-secondary">Add New Address</h3>
+                            </div>
+                          </td>
+                          <td></td>
+                        </tr>
+
+                      </tbody>
                     )
-                  )}
-                </tbody>
-              ) : (
-                <tbody></tbody>
-              )}
-            </Table>
+                    : (
+                      <tbody></tbody>
+                    )}
+                </Table>
                                     </div>
                                 </div>
                             </div>

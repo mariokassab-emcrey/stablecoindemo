@@ -5,8 +5,10 @@ import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import AccountBookDialog from './AccountBookdialog.js';
 import { collection, updateDoc,addDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { X,Check } from 'lucide-react';
+import { X,Check,SquareX } from 'lucide-react';
+
 function PayDialog(props) {
+  
   const dialogRef = useRef(null);
   const [balance, setBalance] = useState(0);
   const [gasFees, setGasFees] = useState(0);
@@ -86,8 +88,11 @@ try {
         Name:event.target.Reference.value,
         To:event.target.Address.value,
         Amount:event.target.Amount.value,
+
         TransactionDateTime:new Date(),
-        Status:status
+        Status:'Success',
+        Type:'Pay'
+
       }
       console.log("id"+id)
        await updateDoc(id, transaction);
@@ -118,7 +123,7 @@ try {
 }
   return (
     <div>
-      <button class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={openDialog}>Pay</button>
+      <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>Pay</button>
       <dialog ref={dialogRef}>
         {/* <h2>Dialog Title</h2> */}
         <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
@@ -157,9 +162,10 @@ try {
                             </div>
 
                          
-                                          <AccountBookDialog mainAccount={props.account} fillAccountDetails={(account)=>{setAddress(account.Address)
+                                          <AccountBookDialog allowPay='true' mainAccount={props.account} truncateEthAddress={props.truncateEthAddress}  fillAccountDetails={(account)=>{setAddress(account.Address)
                                                   setAmount(account.Amount)
                                                   setName(account.Name)
+                                                  
                                                 }}></AccountBookDialog>
                                           <Form style={{color : 'white'}} onSubmit={handleSubmit}>
                                             <Row>

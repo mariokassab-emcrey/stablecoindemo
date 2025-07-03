@@ -8,7 +8,12 @@ function MetaMaskLogin(props) {
 
   useEffect(() => {
     async function connectMetamask() {
-      const provider = await detectEthereumProvider();
+      try {
+        const provider = await Promise.race([
+  await detectEthereumProvider(),
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000))
+]);
+      // const provider = await detectEthereumProvider();
 
       if (provider) {
         setProviderDetected(true);
@@ -27,6 +32,10 @@ function MetaMaskLogin(props) {
         console.log('MetaMask not detected. Please install it.');
         // Provide instructions to the user to install MetaMask
       }
+       } catch (error) {
+          console.error("User rejected connection or other error:", error);
+          // Handle specific errors, e.g., user rejection
+        }
     }
 
     connectMetamask();
@@ -35,12 +44,15 @@ function MetaMaskLogin(props) {
   return (
     <div style={{color: 'White'}}>
       {providerDetected ? (
-        account ? (<div style={{display:'flex'}}>
-          <p style={{paddingRight:'10px'}} class="text-lg font-semibold text-white">Connected account: {props.truncateEthAddress(account)} </p>
-         <button onClick={()=>props.copyTextToClipboard(account)} >
-                  <Copy size={12}/>
-                </button>
-          
+        account ? (
+          <div style={{display:'flex'}}>
+            <p style={{paddingRight:'10px'}} class="text-sm text-gray-300">{props.truncateEthAddress(account)} </p>
+            <button onClick={()=>props.copyTextToClipboard(account)}><Copy size={12} /></button>
+            {/* 
+            <button onClick={()=>props.copyTextToClipboard(account)} >
+              <Copy size={12}/>
+            </button>
+            */}
           </div>
         ) : (
           <p class="text-lg font-semibold text-white">Connecting to MetaMask...</p>

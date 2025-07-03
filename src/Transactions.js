@@ -4,7 +4,7 @@ import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { Copy,ArrowDownRight,ArrowUpRight } from 'lucide-react';
-function AccountBookDialog(props) {
+function Transactions(props) {
   const dialogRef = useRef(null);
    const [Transactions, setTransactions] = useState([]);
  
@@ -76,7 +76,7 @@ useEffect(() => {
                   <Copy size={12}/>
                 </button>
                         </td> */}
-                         <td className="noBorder">
+                         <td style={{verticalAlign:'middle'}} className="noBorder">
                           <h2 style={transaction.Status === 'Pending' ? {color:'#fa8237'}:{color:'#6fde8d'}}>{transaction.Status}</h2>
                           </td>  
                         <td className="noBorder">
@@ -102,4 +102,4 @@ useEffect(() => {
   );
 }
 
-export default AccountBookDialog;
+export default Transactions;

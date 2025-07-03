@@ -3,7 +3,7 @@ import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import EmcreyLogo from './images/emcrey-logo.png'
 import Transactions from './Transactions.js'
 
-
+import { Settings } from 'lucide-react';
 import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 import PayDialog from './Paydialog.js'
 import AccountBookDialog from './AccountBookdialog.js';
@@ -79,6 +79,8 @@ const balance = await Promise.race([
     console.error("Error fetching balance:", error);
   }
 }
+
+
 
 async function getBalance(){
     const erc20iAbi = [
@@ -208,13 +210,8 @@ return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}
             </div>
             
             <div class="flex items-center gap-3">
-                <button class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors">
-             
-                </button>
-                <img 
-                    src={EmcreyLogo} alt="eMcREY Logo"
-                    loading="lazy"
-                />
+                <Settings class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors" />
+                    <img src={EmcreyLogo} alt="eMcREY Logo" loading="lazy" />
             </div>
         </div>
         
@@ -238,34 +235,34 @@ return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}
                         <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                     </div>
                     <div class="self-center">
-                       <PayDialog setStatus={setStatus} account={account} balance={balance} gasFees={gasFees}>                        
-                    </PayDialog>                    
+                       <PayDialog truncateEthAddress={truncateEthAddress} account={account} balance={balance} gasFees={gasFees}/>                        
+                    </div>
+                    <div class="self-center">
+                        <AccountBookDialog  truncateEthAddress={truncateEthAddress} mainAccount={account}/>
                     </div>
                 </div>
-                <button class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary">
-                    Change Account
-                </button>
+              <button class="text-sm font-medium text-button hover:text-white hover:bg-gray-700 px-3 py-1 rounded  transition-colors border border-button focus:outline-none">
+                        Change Account
+                    </button>
             </div>            
         </div>
         <div id="transaction" class="bg-card rounded-lg shadow-lg px-6 py-1  border-gray-700 mb-6" style={{margin:'15px'}}>
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-lg font-semibold text-white">Transactions</h3>
-                <button 
-                    id="showAllBtn"
-                    class="text-primary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-primary" onClick={async ()=>{
-                     const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
-                     const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
-    const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
-const metaMaskAccount = metaMaskAccounts[0];
-                      var url = "https://sepolia.etherscan.io/token/"+contractAddress+"?a="+metaMaskAccount;
-      // 0x1286cc47a092e5927c0b7e54ff5cc1a22da46408
-      window.open(url, '_blank');
-                    }}>
-                    Show All
-                </button>
+                <button
+                        id="showAllBtn"
+                        class="text-sm font-medium text-button hover:text-white hover:bg-gray-700 px-3 py-1 rounded  transition-colors border border-button focus:outline-none" onClick={async () => {
+                            const contractAddress = "0x78d5c26b106fac0b77f7cd7e864909c8ccf72ae0";
+                            const provider = new ethers.BrowserProvider(window.ethereum, 'sepolia');
+                            const metaMaskAccounts = await provider.send("eth_requestAccounts", []);
+                            const metaMaskAccount = metaMaskAccounts[0];
+                            var url = "https://sepolia.etherscan.io/token/" + contractAddress + "?a=" + metaMaskAccount;
+                            window.open(url, '_blank');
+                        }}>
+                        Show All
+                    </button>
             </div>
              <Transactions account={account} truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
-           
         </div>
         {/* <SubAccounts></SubAccounts> */}
     </div>
