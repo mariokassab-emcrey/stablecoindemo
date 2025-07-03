@@ -66,11 +66,11 @@ useEffect(() => {
         Address Book
       </button>
       <dialog ref={dialogRef}>
-        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg noBorder border-gray-700">
 
                             <div class="flex justify-between items-center mb-8">
                                 <div class="flex items-center gap-4">
-                                    <h1 class="text-3xl font-bold text-white">Accounts</h1>
+                                <h1 class="text-3xl font-bold text-white">Addresses</h1>
                                 </div>
                                 <div class="text-right"> 
                                 <SquareX class="text-gray-300 hover:text-secondary p-1 hover:bg-gray-700 transition-colors w-7 h-7" onClick={closeDialog} />
@@ -78,7 +78,7 @@ useEffect(() => {
                              
                             </div>
 
-                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 noBorder border-gray-700 mb-6">
                                 <div class="flex justify-between items-center">
                                     <div class="flex gap-8">
                                        

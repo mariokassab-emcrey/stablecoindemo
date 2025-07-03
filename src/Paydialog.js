@@ -5,7 +5,7 @@ import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import AccountBookDialog from './AccountBookdialog.js';
 import { collection, updateDoc,addDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { X,Check,SquareX } from 'lucide-react';
+import { X,Check,SquareX,Copy } from 'lucide-react';
 
 function PayDialog(props) {
   
@@ -126,7 +126,7 @@ try {
       <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>Pay</button>
       <dialog ref={dialogRef}>
         {/* <h2>Dialog Title</h2> */}
-        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg noBorder border-gray-700">
 
                             {/* <!-- Title bar --> */}
                             <div class="flex justify-between items-center mb-8">
@@ -139,15 +139,19 @@ try {
                             </div>
 
                             {/* <!-- Account Info Panel --> */}
-                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 noBorder border-gray-700 mb-6">
                                 <div class="flex justify-between items-center">
                                     <div class="flex gap-8">
+                                      
                                         <div class="self-center">
                                             <h2 class="text-lg font-semibold text-white">Account</h2>
                                             <div style={{color: 'white'}} class="flex items-center gap-1 mt-1">
-                                               {props.account}
-                                             
+                                              {props.truncateEthAddress(props.account)}
+                                              <button class="focus:outline-none" onClick={()=>props.copyTextToClipboard(props.account)} >
+                                                <Copy size={12}/>
+                                              </button>
                                             </div>
+
                                         </div>
                                         <div style={{color: 'white'}} class="self-center">
                                             <h2 class="text-lg font-semibold text-white">Balance</h2>
@@ -162,7 +166,10 @@ try {
                             </div>
 
                          
-                                          <AccountBookDialog allowPay='true' mainAccount={props.account} truncateEthAddress={props.truncateEthAddress}  fillAccountDetails={(account)=>{setAddress(account.Address)
+                                          <AccountBookDialog allowPay='true' mainAccount={props.account} 
+                                          truncateEthAddress={props.truncateEthAddress} 
+                                          copyTextToClipboard={props.copyTextToClipboard}
+                                           fillAccountDetails={(account)=>{setAddress(account.Address)
                                                   setAmount(account.Amount)
                                                   setName(account.Name)
                                                   
@@ -210,9 +217,10 @@ try {
                                             <br></br>
                                             <Row sm={2} >
                                     <Col lg='9'>
-                                    <Button id="payDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="/submitPay" type='submit' >
-<Check></Check>
-                                    </Button>
+                                    <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" formAction="/submitPay" type='submit'>
+                                      Make Payment
+                                    </button>
+
                                     </Col>
                             
                        </Row>
