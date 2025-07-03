@@ -6,6 +6,7 @@ import AccountBookDialog from './AccountBookdialog.js';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { X,Check,SquareX } from 'lucide-react';
+
 function PayDialog(props) {
   const dialogRef = useRef(null);
   const [balance, setBalance] = useState(0);
@@ -16,13 +17,14 @@ function PayDialog(props) {
  
   const openDialog = () => {
     if(balance===0){
-const element = document.getElementById("balanceSC")
+      const element = document.getElementById("balanceSC")
        
-           setBalance(element.innerText) 
-    }if(gasFees===0){
-       const elementPay = document.getElementById("balanceETH")
-           setGasFees(elementPay.innerText)
-           }
+      setBalance(element.innerText) 
+    }
+    if(gasFees===0){
+      const elementPay = document.getElementById("balanceETH")
+      setGasFees(elementPay.innerText)
+    }
     dialogRef.current.showModal(); // Opens the dialog
   };
 
@@ -53,9 +55,11 @@ async function handleSubmit(event) {
   // An event triggered whenever anyone transfers to someone else
   "event Transfer(address indexed from, address indexed to, uint amount)"
 ];
-  const writeStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, signer);
-  var valueDecimal18 = ethers.parseEther(event.target.Amount.value);
-   writeStablecoinContract.transfer(event.target.Address.value,valueDecimal18).then((balance) => {});
+
+const writeStablecoinContract = new ethers.Contract(contractAddress, erc20iAbi, signer);
+var valueDecimal18 = ethers.parseEther(event.target.Amount.value);
+writeStablecoinContract.transfer(event.target.Address.value,valueDecimal18).then((balance) => {});
+
 try {
       const transaction ={
         From:props.account,
@@ -91,51 +95,53 @@ try {
             </div>
           </div>
 
-                            {/* <!-- Account Info Panel --> */}
-                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex gap-8">
-                                        <div class="self-center">
-                                            <h2 class="text-lg font-semibold text-white">Account</h2>
-                                            <div style={{color: 'white'}} class="flex items-center gap-1 mt-1">
-                                               {props.account}
-                                             
-                                            </div>
-                                        </div>
-                                        <div style={{color: 'white'}} class="self-center">
-                                            <h2 class="text-lg font-semibold text-white">Balance</h2>
-                                          {balance}
-                                        </div>
-                                        <div style={{color: 'white'}} class="self-center">
-                                            <h3 class="text-base font-semibold text-white">Network Gas</h3>
-                                            {gasFees}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+          {/* <!-- Account Info Panel --> */}
+          <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+              <div class="flex justify-between items-center">
+                  <div class="flex gap-8">
+                      <div class="self-center">
+                          <h2 class="text-lg font-semibold text-white">Account</h2>
+                          <div style={{color: 'white'}} class="flex items-center gap-1 mt-1">
+                              {props.account}
+                          </div>
+                      </div>
+                      <div style={{color: 'white'}} class="self-center">
+                          <h2 class="text-lg font-semibold text-white">Balance</h2>
+                        {balance}
+                      </div>
+                      <div style={{color: 'white'}} class="self-center">
+                          <h3 class="text-base font-semibold text-white">Network Gas</h3>
+                          {gasFees}
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-                         
-                                          <AccountBookDialog fillAccountDetails={(account)=>{setAddress(account.Address)
-                                                  setAmount(account.Amount)
-                                                  setName(account.Name)
-                                                }}></AccountBookDialog>
-                                          <Form style={{color : 'white'}} onSubmit={handleSubmit}>
-                                            <Row>
-                                                <Col>
-                                                <Form.Group controlId="Address">
-                <Form.Label className="FormLabel">
-                  Address<font color="#ff0000">*</font>
-                </Form.Label>
-                <Form.Control
-                  type="float"
-                  name="Address"
-                  required
-                 value={Address}
-                ></Form.Control>
-              </Form.Group>
-                                               
-                                                </Col>
-                                                <Col> <Form.Group controlId="Amount">
+          <AccountBookDialog 
+            truncateEthAddress={props.truncateEthAddress} 
+            copyTextToClipboard={props.copyTextToClipboard}
+            fillAccountDetails={(account)=>{
+                  setAddress(account.Address)
+                  setAmount(account.Amount)
+                  setName(account.Name)
+                }}>
+          </AccountBookDialog>
+
+                            <Form style={{color : 'white'}} onSubmit={handleSubmit}>
+                              <Row>
+                                  <Col>
+                                    <Form.Group controlId="Address">
+                                      <Form.Label className="FormLabel">
+                                        Address<font color="#ff0000">*</font>
+                                      </Form.Label>
+                                      <Form.Control
+                                        type="float"
+                                        name="Address"
+                                        required value={Address}></Form.Control>
+                                    </Form.Group>
+                                  </Col>
+
+                                  <Col> <Form.Group controlId="Amount">
                 <Form.Label className="FormLabel">
                   Amount<font color="#ff0000">*</font>
                 </Form.Label>

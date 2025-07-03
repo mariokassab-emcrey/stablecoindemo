@@ -62,29 +62,28 @@ useEffect(() => {
                             :  <ArrowUpRight class="w-5 h-5 text-green-400" size={24}></ArrowUpRight>
                             }
                           </div>  
-               
-                          </td>
-                            <td className="noBorder">
-                              <h2 class="text-lg font-bold display: flex gap-1" style={{onHover:{color:'black'}}}>{transaction.Name}</h2>
-                              <div class="display: flex gap-1">
-                                {props.truncateEthAddress(transaction.From)}  
-                                <button onClick={()=>props.copyTextToClipboard(transaction.From)} >
-                                  <Copy size={12}/>
-                                </button>
-                              </div>
-                            </td>
-                       
-                            <td className="noBorder">
-                              <h2>{transaction.TransactionDateTime.slice(0,15)}</h2>
-                              <p>{transaction.TransactionDateTime.slice(15,25)}</p>
-                              </td>    
-                            <td className="noBorder">
-                          
-                            <h2  style={{fontSize:'24px',}}  class={transaction.Type === 'Pay' ? "text-red-400 font-mono text-right" : "text-green-400 font-mono text-right"}>{transaction.Amount}</h2>
-                        
-                          </td>    
-                      </tr>
-                    ))}
+                        </td>
+
+                        <td className="noBorder">
+                          <h2 class="text-lg font-bold display: flex gap-1" style={{onHover:{color:'black'}}}>{transaction.Name}</h2>
+                          <div class="display: flex gap-1 text-gray-300">
+                            {props.truncateEthAddress(transaction.From)}  
+                            <button class="focus:outline-none" onClick={()=>props.copyTextToClipboard(transaction.From)} >
+                              <Copy size={12}/>
+                            </button>
+                          </div>
+                        </td>
+                    
+                        <td className="noBorder">
+                          <h2>{transaction.TransactionDateTime.slice(0,15)}</h2>
+                          <p>{transaction.TransactionDateTime.slice(15,25)}</p>
+                        </td>    
+
+                        <td className="noBorder">
+                          <h2 class={transaction.Type === 'Pay' ? "text-red-400 font-medium font-mono text-right" : "text-green-400 font-medium font-mono text-right"}>{transaction.Amount}</h2>
+                        </td>    
+                    </tr>
+                  ))}
                 </tbody>
               ) 
               : ( 

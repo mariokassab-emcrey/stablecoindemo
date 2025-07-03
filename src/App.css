@@ -56,6 +56,7 @@ css for button - currently not used
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: #374151;
   color: white;
@@ -65,8 +66,9 @@ css for button - currently not used
   border-collapse: collapse;
 }
 .tr, td {
-    border-bottom: none !important;
-    border-top: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  vertical-align: middle !important;
 }
 
 .App-link {

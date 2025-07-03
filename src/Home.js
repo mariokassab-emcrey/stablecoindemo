@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import EmcreyLogo from './images/emcrey-logo.png'
 import Transactions from './Transactions.js'
-
+import truncateEthAddress from "./functions.js";
 import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 import PayDialog from './Paydialog.js'
 import AccountBookDialog from './AccountBookdialog.js';
@@ -17,13 +17,16 @@ function Home() {
     const [account, setAccount] = useState('');
     const [balance, setBalance] = useState('');
     const [gasFees, setGasfees] = useState('');
+
+    //addressBookDialog
+    const [Address, setAddress] = useState();
+    const [Name, setName] = useState();
+    const [Amount, setAmount] = useState();
+
     // Event handler to update the state when the input changes
     const handleChange = (event) => {
         setInputValue(event.target.value);
     };
-
-    // temp var for Addressbook dialog
-    var props;
 
     function truncateEthAddress(address) {
         var truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
@@ -163,11 +166,6 @@ await provider.getBalance(metaMaskAccount).then((balance) => {
             
             <div class="flex items-center gap-3">
                 <Settings class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"/>
-                {/*
-                <button class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <Settings/>
-                </button>
-                */}
                 <img src={EmcreyLogo} alt="eMcREY Logo" loading="lazy" />
             </div>
         </div>
@@ -191,10 +189,25 @@ await provider.getBalance(metaMaskAccount).then((balance) => {
                         <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                     </div>
                     <div class="self-center">
-                       <PayDialog account={account} balance={balance} gasFees={gasFees}/>                        
+                       <PayDialog 
+                            truncateEthAddress={truncateEthAddress} 
+                            copyTextToClipboard={copyTextToClipboard}
+                            account={account} 
+                            balance={balance} 
+                            gasFees={gasFees}/>                        
                     </div>
                     <div class="self-center">
-                        <AccountBookDialog fillAccountDetails={props}/>
+
+                    <AccountBookDialog 
+                        truncateEthAddress={truncateEthAddress} 
+                        copyTextToClipboard={copyTextToClipboard}
+                        fillAccountDetails={(account)=>{
+                            setAddress(account.Address)
+                            setAmount(account.Amount)
+                            setName(account.Name)
+                        }}>
+                    </AccountBookDialog>
+
                     </div>
                 </div>
                 <button class="text-sm font-medium text-button hover:text-white hover:bg-gray-700 px-3 py-1 rounded  transition-colors border border-button focus:outline-none">

@@ -1,9 +1,10 @@
 import React, { useRef,useState,useEffect } from 'react';
-import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
+import { Table, Row } from "react-bootstrap";
 import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Pointer,Delete,Plus,X,BookAIcon,SquareX,Trash2,Check } from 'lucide-react';
+import { Plus,SquareX,Trash2,Check,Copy } from 'lucide-react';
+
 function AccountBookDialog(props) { 
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([{Address:'0x78d5c26b123fac0b77f7cd7e864909c8ccf72ae0',Name:'marie',Amount:0.2,ID:null},{Address:'0x78d5c26b144fac0b77f7cd7e864909c8ccf72ae0',Name:'Laurence',Amount:0.3,ID:null}]);
@@ -36,14 +37,14 @@ function AccountBookDialog(props) {
       }
   // setAccountBook([...AccountBook, newAccount]);
 
-}
+  }
 
-useEffect(() => {
+  useEffect(() => {
     const fetchMenu = async () => {
       const menuCollection = await getDocs(collection(db, "Book"));
-       console.log("menuCollection.docs"+menuCollection.docs[0].id)
+      console.log("menuCollection.docs"+menuCollection.docs[0].id)
       const fullMenu = menuCollection.docs.map((doc) => ({
-       ID:doc.id,
+        ID:doc.id,
         Address: doc.data().Address,
         Amount: doc.data().Amount,
         Name: doc.data().Name,
@@ -55,9 +56,6 @@ useEffect(() => {
 
   return (
     <div>
-{/*
-<button style={{marginBottom:'15px'}}  class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>
-*/}
 
       <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>
         Address Book
@@ -100,23 +98,27 @@ useEffect(() => {
 
                           <td className="td-home">
                             <div class="flex flex-col">
-                              <i class="text-l">{account.Name}</i>
-                              <i class="text-sm text-gray-300">{account.Address}</i>
-                              {/*{truncateEthAddress(account.Address)}*/}
+                              <p class="text-lg font-bold">{account.Name}</p>
+                              <div class="display: flex gap-1 text-gray-300">
+                                {props.truncateEthAddress(account.Address)}  
+                                <button class="focus:outline-none" onClick={()=>props.copyTextToClipboard(account.Address)} >
+                                  <Copy size={12}/>
+                                </button>
+                              </div>
                             </div>
                           </td>
                           
                           <td style={{width:'200px'}}>
                             <Row style={{paddingLeft:'25px'}}> 
 
-                            <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel transition-colors border border-button focus:outline-none"
-                                onClick={()=>
-                                  {
-                                    props.fillAccountDetails(account)
-                                    closeDialog()
-                                  }}>
-                              Pay
-                            </button>
+                              <button class="text-sm font-medium text-button px-3 py-1 rounded hover:bg-panel transition-colors border border-button focus:outline-none"
+                                  onClick={()=>
+                                    {
+                                      props.fillAccountDetails(account)
+                                      closeDialog()
+                                    }}>
+                                Pay
+                              </button>
 
                               <div style={{width:'10px',height:'10px'}}></div>
                               <Trash2 class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
