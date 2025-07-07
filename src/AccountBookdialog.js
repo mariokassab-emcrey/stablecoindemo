@@ -7,6 +7,7 @@ import { Check,Copy,Plus,SquareX,Trash2 } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([]);
+  const [IsFormVisible,setIsFormVisible] = useState(["false"]);
  
   const openDialog = () => {
   
@@ -31,7 +32,7 @@ async function handleSubmit(event) {
 
       await addDoc(collection(db, "Book"), newAccount);
       alert("Account Added successfully!");
-      
+      setIsFormVisible("false")
       // ✅ Redirect back to menu after successful order
       window.location.href = "/";
     } catch (error) {
@@ -96,7 +97,7 @@ useEffect(() => {
                             <tr key={index}>
                               <td>
                                 <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                                  <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" onclick="">
+                                  <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" >
                                     <Check class="w-5 h-5 text-green-700 " />
                                   </div>
                                 </div>
@@ -145,13 +146,13 @@ useEffect(() => {
                           <td>
                             <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
                               <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
-                                <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary" />
+                               <button> <Plus onClick={()=>setIsFormVisible("true")} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
                             </div>
                           </td>
                           <td>
                             <div class=" flex-1 min-w-0">
-                              <h3 class="font-medium text-gray-400 group-hover:text-secondary">Add New Address</h3>
+                              <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
                             </div>
                           </td>
                           <td></td>
@@ -169,7 +170,7 @@ useEffect(() => {
 
                             
                                           
-                                          <Form style={{color : 'white'}} onSubmit={handleSubmit}>
+                           {IsFormVisible === 'true' ? <Form style={{color : 'white'}} onSubmit={handleSubmit}>
                                             <Row>
                                                 <Col>
                                                 <Form.Group controlId="Address">
@@ -221,7 +222,7 @@ useEffect(() => {
                             {/* </div> */}
                             
                        </Row>
-                                          </Form>
+                                          </Form> : null }               
                                           </div>
             
                                     
