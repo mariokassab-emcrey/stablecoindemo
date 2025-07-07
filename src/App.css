@@ -28,13 +28,16 @@
   color: white;
 }
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #2596be;
-  
+  background-color: #374151;
+  color: white;
 }
 .table {border: none;
-border-collapse: collapse;}
+  border-collapse: collapse;
+}
 .tr, td {
-    border-bottom: none;
+  border-bottom: none;
+  border-top: none !important;
+  vertical-align: middle !important;
 }
 
 .App-link {
