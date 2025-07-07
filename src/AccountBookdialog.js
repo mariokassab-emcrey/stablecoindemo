@@ -144,33 +144,15 @@ useEffect(() => {
                         )}
                         <tr>
                           <td>
-                            <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                            {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
                               <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
                                <button> <Plus onClick={()=>setIsFormVisible("true")} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
-                            </div>
+                            </div>}
+                            
                           </td>
                           <td>
-                            <div class=" flex-1 min-w-0">
-                              <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
-                            </div>
-                          </td>
-                          <td></td>
-                        </tr>
-
-                      </tbody>
-                    )
-                    : (
-                      <tbody></tbody>
-                    )}
-                </Table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            
-                                          
-                           {IsFormVisible === 'true' ? <Form style={{color : 'white'}} onSubmit={handleSubmit}>
+                            {IsFormVisible === 'true' ? <Form style={{color : 'white'}} onSubmit={handleSubmit}>
                                             <Row>
                                                 <Col>
                                                 <Form.Group controlId="Address">
@@ -222,7 +204,27 @@ useEffect(() => {
                             {/* </div> */}
                             
                        </Row>
-                                          </Form> : null }               
+                                          </Form> : <div class=" flex-1 min-w-0">
+                              <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
+                            </div> }     
+                            
+                          </td>
+                          <td></td>
+                        </tr>
+
+                      </tbody>
+                    )
+                    : (
+                      <tbody></tbody>
+                    )}
+                </Table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                                          
+                                     
                                           </div>
             
                                     
