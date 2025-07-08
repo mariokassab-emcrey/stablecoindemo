@@ -50,7 +50,7 @@ function InitPage() {
          <Router><div>
                      {admin ? (
                        <>
-                         <Link to="/admin" className="mr-4 text-gold hover:underline">Admin Dashboard</Link>
+                         {/* <Link to="/admin" className="mr-4 text-gold hover:underline">Admin Dashboard</Link> */}
                          <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                            Logout
                          </button>
@@ -67,10 +67,10 @@ function InitPage() {
                     <Route path="/admin" element={admin ? (
                                 <>
                                   <AdminDashboard />
-                                  <div className='mt-10 p-6 bg-gray-900 rounded-lg'>
+                                  {/* <div className='mt-10 p-6 bg-gray-900 rounded-lg'>
                                     <h2 className='text-2xl font-bold mb-4'>Admin Tools</h2>
                            
-                                  </div>
+                                  </div> */}
                                 </>
                               ) : <Navigate to="/login" />} />
                     </Routes></Router>
