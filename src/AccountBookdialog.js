@@ -3,10 +3,13 @@ import { Table, Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Check, Copy, Plus, SquareX, Trash2 } from 'lucide-react';
+
+import { Check,Copy,Plus,SquareX,Trash2,X } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([]);
+  const [IsFormVisible,setIsFormVisible] = useState(["false"]);
+ 
 
   const openDialog = () => {
 
@@ -31,6 +34,8 @@ function AccountBookDialog(props) {
 
       await addDoc(collection(db, "Book"), newAccount);
       alert("Account Added successfully!");
+
+      setIsFormVisible("false")
 
       // ✅ Redirect back to menu after successful order
       window.location.href = "/";
@@ -90,13 +95,14 @@ function AccountBookDialog(props) {
                       <tbody>
                         {AccountBook.map(
                           (account, index) => (
-                            account.MainAccount === props.mainAccount ?
-                              <tr key={index}>
-                                <td>
-                                  <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                                    <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" onclick="">
-                                      <Check class="w-5 h-5 text-green-700 " />
-                                    </div>
+
+                            account.MainAccount === props.mainAccount ? 
+                            <tr key={index}>
+                              <td>
+                                <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                                  <div class="w-10 h-10 rounded-full border-2 border-green-700 flex items-center justify-center" >
+                                    <Check class="w-5 h-5 text-green-700 " />
+
                                   </div>
                                 </td>
 
@@ -141,16 +147,76 @@ function AccountBookDialog(props) {
                         )}
                         <tr>
                           <td>
-                            <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                            {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
                               <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
-                                <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary" />
+                               <button> <Plus onClick={()=>setIsFormVisible("true")} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
-                            </div>
+                            </div>}
+                            
                           </td>
                           <td>
-                            <div class=" flex-1 min-w-0">
-                              <h3 class="font-medium text-gray-400 group-hover:text-secondary">Add New Address</h3>
-                            </div>
+
+                            {IsFormVisible === 'true' ? <Form style={{color : 'white'}} onSubmit={handleSubmit}>
+                                            <Row>
+                                                <Col>
+                                                <Form.Group controlId="Address">
+                <Form.Label className="FormLabel">
+                  Address<font COLOR="#ff0000">*</font>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="Address"
+                  required
+                 
+                ></Form.Control>
+              </Form.Group>
+                                               
+                                                </Col>
+                                                <Col><Form.Group controlId="Name">
+
+                <Form.Label className="FormLabel">Name <font COLOR="#ff0000">*</font></Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  //   defaultValue={this.props.AssignmentTopic}
+                  //   dir="RTL"
+                  name="Name"
+                ></Form.Control>
+              </Form.Group>
+
+                                                </Col>
+                                                {/* <Col> <Form.Group controlId="Amount">
+                <Form.Label className="FormLabel">
+                  Amount
+                </Form.Label>
+                <Form.Control
+                  type="float"
+                  name="Amount"
+                  
+                 
+                ></Form.Control>
+              </Form.Group>
+                                                </Col> */}
+                                                <Col sm="2"><Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" formAction="submitBook" type='submit' >
+                                        <Plus/>
+                                    </Button></Col>
+                                    <Col sm="2"><Button style={{marginTop: '33px'}} id="AccountBookDialogXCancelBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" onClick={()=>setIsFormVisible("false")} >
+                                        <X/>
+                                    </Button></Col>
+                                            </Row>
+                                            <br></br>
+                                            <Row sm={2} >
+                                    {/* <Col lg='9'>
+                                    
+                                    </Col> */}
+                                {/* </div> */}
+                            {/* </div> */}
+                            
+                       </Row>
+                                          </Form> : <div class=" flex-1 min-w-0">
+                              <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
+                            </div> }     
+                            
                           </td>
                           <td></td>
                         </tr>
@@ -161,51 +227,17 @@ function AccountBookDialog(props) {
                       <tbody></tbody>
                     )}
                 </Table>
-              </div>
-            </div>
-          </div>
+                                    </div>
+                                </div>
+                            </div>
 
-
-
-          <Form style={{ color: 'white' }} onSubmit={handleSubmit}>
-            <Row>
-              <Col>
-                <Form.Group controlId="Address">
-                  <Form.Label className="FormLabel">
-                    Address<font COLOR="#ff0000">*</font>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="Address"
-                    required
-
-                  ></Form.Control>
-                </Form.Group>
-
-              </Col>
-              <Col><Form.Group controlId="Name">
-                <Form.Label className="FormLabel">Name <font COLOR="#ff0000">*</font></Form.Label>
-                <Form.Control
-                  type="text"
-                  required
-                  //   defaultValue={this.props.AssignmentTopic}
-                  //   dir="RTL"
-                  name="Name"
-                ></Form.Control>
-              </Form.Group>
-              </Col>
-              <Col><Button style={{ marginTop: '33px' }} id="AccountBookDialogPayBtn" class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="submitBook" type='submit' >
-                <Plus />
-              </Button></Col>
-            </Row>
-            <br></br>
-            <Row sm={2} >
-
-            </Row>
-          </Form>
-        </div>
-
-
+                            
+                                          
+                                     
+                                          </div>
+            
+                                    
+       
 
       </dialog>
     </div>
