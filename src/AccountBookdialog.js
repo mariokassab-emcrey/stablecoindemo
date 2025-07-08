@@ -3,7 +3,7 @@ import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Check,Copy,Plus,SquareX,Trash2 } from 'lucide-react';
+import { Check,Copy,Plus,SquareX,Trash2,X } from 'lucide-react';
 function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([]);
@@ -191,8 +191,11 @@ useEffect(() => {
                 ></Form.Control>
               </Form.Group>
                                                 </Col> */}
-                                                <Col><Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-secondary hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-secondary" formAction="submitBook" type='submit' >
+                                                <Col sm="2"><Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" formAction="submitBook" type='submit' >
                                         <Plus/>
+                                    </Button></Col>
+                                    <Col sm="2"><Button style={{marginTop: '33px'}} id="AccountBookDialogXCancelBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" onClick={()=>setIsFormVisible("false")} >
+                                        <X/>
                                     </Button></Col>
                                             </Row>
                                             <br></br>
