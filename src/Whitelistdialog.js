@@ -1,14 +1,17 @@
 import React, { useRef,useState,useEffect } from 'react';
 import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
 import './App.css';
-import { collection, getDocs,addDoc,deleteDoc,doc } from "firebase/firestore";
+import { collection, getDocs,addDoc,deleteDoc,doc,updateDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import { Check,Copy,Plus,SquareX,Trash2,X } from 'lucide-react';
+import { Check,Copy,Plus,SquareX,Trash2,X,EditIcon } from 'lucide-react';
 function WhitelistDialog(props) {
   const dialogRef = useRef(null);
   const [Whitelist, setWhitelist] = useState([]);
   const [IsFormVisible,setIsFormVisible] = useState(["false"]);
- 
+  const [CurrentID,setCurrentID] = useState([""]);
+ const [IsUpdate,setIsUpdate] = useState(["false"]);
+ const [Address,setAddress] = useState([""]);
+ const [Name,setName] = useState([""]);
   const openDialog = () => {
   
            
@@ -20,12 +23,36 @@ function WhitelistDialog(props) {
   };
 async function handleSubmit(event) {
   event.preventDefault();
-  const newAccount = {
+  
+  let newAccount = {
     
     Address: event.target.Address.value,
     Name: event.target.Name.value,
     
   };
+  if(IsUpdate){
+    
+    const newAccount = {
+    
+    Address: Address,
+    Name: Name,
+    
+  };
+  try {
+    console.log("CurrentID"+CurrentID)
+    const docRef = doc(db, "Whitelist", CurrentID);
+  await updateDoc(docRef, newAccount);
+       await fetchMenu()
+       setIsUpdate("false")
+       setIsFormVisible("false")
+       alert("List Updated successfully")
+  }catch (error) {
+      console.error("Error Updating: ", error);
+      alert("Failed Update the Whitelist.");
+    }
+  }
+  else{
+  
   try {
       
 
@@ -39,10 +66,10 @@ async function handleSubmit(event) {
                                      
                                   
     } catch (error) {
-      console.error("Error placing order: ", error);
-      alert("Failed to place order.");
+      console.error("Error adding to the list: ", error);
+      alert("Failed to Add to the whitelist.");
     }
-  
+  }
   // setWhitelist([...Whitelist, newAccount]);
 
 }
@@ -137,6 +164,17 @@ useEffect(() => {
                                       setWhitelist(Whitelist.filter((item) => item.ID !== account.ID));
                                     }}>
                                   </Trash2>
+                                  <EditIcon class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
+                                   onClick={ () => {setIsUpdate("true")
+                                    setIsFormVisible("true")
+                                    setAddress(account.Address)
+                                    setName(account.Name)
+                                    setCurrentID(account.ID)
+                                    
+                                     
+                                    }}>
+
+                                  </EditIcon>
                                 </Row>
                               </td>
                             </tr>
@@ -146,7 +184,7 @@ useEffect(() => {
                           <td>
                             {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
                               <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
-                               <button> <Plus onClick={()=>setIsFormVisible("true")} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
+                               <button> <Plus onClick={()=>{setIsFormVisible("true"); setAddress('');setName('');setCurrentID('')}} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
                             </div>}
                             
@@ -163,6 +201,7 @@ useEffect(() => {
                   type="text"
                   name="Address"
                   required
+                  defaultValue={Address}
                  
                 ></Form.Control>
               </Form.Group>
@@ -173,6 +212,7 @@ useEffect(() => {
                 <Form.Control
                   type="text"
                  required
+                 defaultValue={Name}
                 //   defaultValue={this.props.AssignmentTopic}
                 //   dir="RTL"
                   name="Name"
@@ -208,7 +248,7 @@ useEffect(() => {
                             
                        </Row>
                                           </Form> : <div class=" flex-1 min-w-0">
-                              <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
+                              <button onClick={()=>{setIsFormVisible("true"); setAddress('');setName('');setCurrentID('')}}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
                             </div> }     
                             
                           </td>
