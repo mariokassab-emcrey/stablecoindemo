@@ -104,6 +104,7 @@ function Home() {
             const element = document.getElementById("balanceETH");
             //   const elementPay = document.getElementById("payBalanceETH");
             const newGasBalance = ethers.formatUnits(balance, 18);
+            if(element){
             element.innerText = newGasBalance;
 
             //   elementPay.innerText = newGasBal
@@ -124,13 +125,17 @@ function Home() {
                         element.classList.add('text-red-500');
                         //  elementPay.classList.add('text-red-500');
                     }
+                }
             gasBalance = newGasBalance;
+            
             // reset after 750ms
             setTimeout(() => {
+                if(element){
                 element.classList.remove('text-gray-500');
                 element.classList.remove('text-green-500');
                 element.classList.remove('text-red-500');
                 element.classList.add('text-white');
+                }
                 //  elementPay.classList.remove('text-gray-500');
                 //  elementPay.classList.remove('text-green-500');
                 //  elementPay.classList.remove('text-red-500');
@@ -141,11 +146,13 @@ function Home() {
                 `Error fetching balance: ${error.message}.
               Code: ${error.code}. Data: ${error.data}`);
         });
+        
 
         await readStablecoinContract.balanceOf(metaMaskAccount).then((balance) => {
             const element = document.getElementById("balanceSC")
             //   const elementPay = document.getElementById("payBalanceSC")
             var newSCBalance = ethers.formatUnits(balance, 18);
+            if(element){
             element.innerText = newSCBalance;
             //   elementPay.innerText = newSCBalance;
             setBalance(newSCBalance)
@@ -164,14 +171,17 @@ function Home() {
                         element.classList.add('text-red-400');
                         //  elementPay.classList.add('text-red-400');
                     }
+                }
             scBalance = newSCBalance;
 
             // reset after 750ms
             setTimeout(function () {
+                if(element){
                 element.classList.remove('text-gray-400');
                 element.classList.remove('text-green-400');
                 element.classList.remove('text-red-400');
                 element.classList.add('text-white');
+                }
             }, 750);
         }).catch((error) => {
             console.error(

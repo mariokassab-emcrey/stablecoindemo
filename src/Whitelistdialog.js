@@ -183,7 +183,7 @@ useEffect(() => {
                         <tr>
                           <td>
                             {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                              <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onclick="">
+                              <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" >
                                <button> <Plus onClick={()=>{setIsFormVisible("true"); setAddress('');setName('');setCurrentID('')}} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
                             </div>}
