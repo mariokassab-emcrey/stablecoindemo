@@ -43,15 +43,15 @@ async function handleSubmit(event) {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-  let flag = 0x00001;
+  let flag = '0x00001';
   if(event.target.isBlacklistedFlags.value)
-    flag = 0x00004;
+    flag = '0x00004';
   else{
     if(event.target.canReceiveFlags.value)
-       flag = 0x00002;
+       flag = '0x00002';
       else{
         if(event.target.canSendFlags.value){
-          flag = 0x00003;
+          flag = '0x00003';
         }
       }
   }
