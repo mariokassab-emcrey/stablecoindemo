@@ -55,6 +55,9 @@ async function handleSubmit(event) {
         }
       }
   }
+console.log("event.target.Address.value"+event.target.Address.value)
+  console.log("flag"+flag)
+
 
   const tx = await contract.addPermission(event.target.Address.value,flag);
   fetchMenu();
@@ -63,9 +66,9 @@ async function handleSubmit(event) {
   //   const docRef = doc(db, "Whitelist", CurrentID);
   // await updateDoc(docRef, newAccount);
   //      await fetchMenu()
-  //      setIsUpdate("false")
-  //      setIsFormVisible("false")
-  //      alert("List Updated successfully")
+       setIsUpdate("false")
+       setIsFormVisible("false")
+       alert("List Updated successfully")
   // }catch (error) {
   //     console.error("Error Updating: ", error);
   //     alert("Failed Update the Whitelist.");
