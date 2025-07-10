@@ -56,7 +56,7 @@ async function handleSubmit(event) {
       }
   }
 
-  const tx = await contract.addPermissions(event.target.Address.value,flag);
+  const tx = await contract.addPermission(event.target.Address.value,flag);
   // try {
   //   console.log("CurrentID"+CurrentID)
   //   const docRef = doc(db, "Whitelist", CurrentID);
