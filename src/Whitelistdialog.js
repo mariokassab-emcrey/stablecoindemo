@@ -44,13 +44,13 @@ async function handleSubmit(event) {
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
   let flag = '0x00001';
-  if(event.target.isBlacklistedFlags.value)
+  if(event.target.isBlacklistedFlags.value==='true')
     flag = '0x00004';
   else{
-    if(event.target.canReceiveFlags.value)
+    if(event.target.canReceiveFlags.value==='true')
        flag = '0x00002';
       else{
-        if(event.target.canSendFlags.value){
+        if(event.target.canSendFlags.value==='true'){
           flag = '0x00003';
         }
       }
