@@ -4,7 +4,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import WhitelistDialog from './Whitelistdialog'
 import { ethers } from 'ethers';
-import contractAbi from './DemoFFKSAABI.json';
+import contractAbi from './ABI.json';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const callContractFunction = async () => {
       try {
-        const contractAddress = '0xA4aB17BfB1F32a0671453dd2e40DE7c4FB0B0Fe2';
+        const contractAddress = '0x715df9a13088ef923120f3355aa27441f9155614';
   const provider = new ethers.JsonRpcProvider('https://fluent-chaotic-lake.ethereum-sepolia.quiknode.pro/b989ab5dc846e9bfab7637b37a5b36f0bcd11fb5/');
   const contract = new ethers.Contract(contractAddress, contractAbi, provider);
         const result = await contract.getTotalMinted();

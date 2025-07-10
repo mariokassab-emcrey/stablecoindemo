@@ -4,6 +4,8 @@ import './App.css';
 import { collection, getDocs,addDoc,deleteDoc,doc,updateDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { Check,Copy,Plus,SquareX,Trash2,X,EditIcon } from 'lucide-react';
+import { ethers } from 'ethers';
+import contractAbi from './ABI.json';
 function WhitelistDialog(props) {
   const dialogRef = useRef(null);
   const [Whitelist, setWhitelist] = useState([]);
@@ -12,6 +14,7 @@ function WhitelistDialog(props) {
  const [IsUpdate,setIsUpdate] = useState(["false"]);
  const [Address,setAddress] = useState([""]);
  const [Name,setName] = useState([""]);
+
   const openDialog = () => {
   
            
@@ -49,7 +52,20 @@ async function handleSubmit(event) {
   else{
   
   try {
-      
+      {
+      try {
+        const contractAddress = '0x715df9a13088ef923120f3355aa27441f9155614';
+  // const provider = new ethers.JsonRpcProvider('https://fluent-chaotic-lake.ethereum-sepolia.quiknode.pro/b989ab5dc846e9bfab7637b37a5b36f0bcd11fb5/');
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+  const tx = await contract.setPermissions(event.target.Address.value,event.target.Name.value);
+        // const result = await contract.setPermissions(event.target.Address.value,event.target.Name.value);
+        // console.log("result"+result);
+      } catch (error) {
+        console.error('Error calling contract function:', error);
+      }
+    }
 
       await addDoc(collection(db, "Whitelist"), newAccount);
        await fetchMenu()
