@@ -60,7 +60,7 @@ console.log("event.target.Address.value"+event.target.Address.value)
 
 
   const tx = await contract.addPermission(event.target.Address.value,flag);
-  fetchMenu();
+  await fetchMenu();
   // try {
   //   console.log("CurrentID"+CurrentID)
   //   const docRef = doc(db, "Whitelist", CurrentID);
