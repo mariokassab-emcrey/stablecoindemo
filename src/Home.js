@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import EmcreyLogo from './images/emcrey-logo.png'
 import Transactions from './Transactions.js'
-
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebaseConfig";
 import { Settings } from 'lucide-react';
 import MetaMaskLogin from './metamaskLogin/MetaMaskLogin.js';
 import PayDialog from './Paydialog.js'
@@ -14,10 +15,55 @@ function Home() {
     const [balance, setBalance] = useState('0');
     const [gasFees, setGasfees] = useState('0');
     const [Status, setStatus] = useState();
+    const [childKey, setChildKey] = useState(0);
+    const [array, setArray] = useState([]);
+    useEffect(() => {
+        const fetchTransactions = async () => {
+          try {
+           
+            const menuCollection = await getDocs(collection(db, "Transaction"));
+            console.log("TransactionDateTime.seconds" + menuCollection.docs[0].data().TransactionDateTime)
+            console.log("(new Date(doc.data().TransactionDateTime.seconds * 1000)).toLocaleString" + new Date(menuCollection.docs[0].data().TransactionDateTime.seconds * 1000))
+            const transactions = menuCollection.docs.map((doc) => ({
+              ID: doc.id,
+              From: doc.data().From,
+              Name: doc.data().Name,
+              To: doc.data().To,
+              Amount: doc.data().Amount,
+              TransactionDateTime: (new Date(doc.data().TransactionDateTime.seconds * 1000)).toString(),
+              Type: doc.data().Type,
+              Status: doc.data().Status
+    
+            }));
+            console.log(transactions.length)
+            setArray(transactions);
+    
+          } catch (error) {
+            console.error("Error fetching data: ", error);
+          }
+        };
+        fetchTransactions();
+      }, []);
+
+  const addDataToArray = (data) => {
+    setArray((prevArray) => [...prevArray, data]);
+  };
+const updateStatus = (Success) => {
+  setArray((prevArray) =>
+    prevArray.map((item) => {
+      if (item.Status === 'Pending') {
+        return { ...item, Status: Success === 'true' ? 'Success' :'Failed' };
+      }
+      return item;
+    })
+  );
+};
+
+
+
     // Event handler to update the state when the input changes
-    const handleChange = (event) => {
-        setInputValue(event.target.value);
-    };
+  
+  
     function truncateEthAddress(address) {
         var truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
         var match = address.match(truncateRegex);
@@ -236,7 +282,7 @@ function Home() {
                             <p id="balanceETH" class="text-white  text-sm">{gasFees}</p>
                         </div>
                         <div class="self-center">
-                            <PayDialog truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} account={account} balance={balance} gasFees={gasFees} />
+                            <PayDialog updateStatus={updateStatus} addDataToArray={addDataToArray} truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} account={account} balance={balance} gasFees={gasFees} />
                         </div>
                         <div class="self-center">
                             <AccountBookDialog truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard} mainAccount={account} />
@@ -263,7 +309,7 @@ function Home() {
                         Show All
                     </button>
                 </div>
-                <Transactions account={account} truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
+                <Transactions transactions={array} account={account} truncateEthAddress={truncateEthAddress} copyTextToClipboard={copyTextToClipboard}></Transactions>
             </div>
         </div>
     );

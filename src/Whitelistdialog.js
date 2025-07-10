@@ -23,21 +23,16 @@ function WhitelistDialog(props) {
   };
 async function handleSubmit(event) {
   event.preventDefault();
-  
-  let newAccount = {
+  console.log("isupdate"+IsUpdate)
+  const newAccount = {
     
     Address: event.target.Address.value,
     Name: event.target.Name.value,
     
   };
-  if(IsUpdate){
+  if(IsUpdate==="true"){
     
-    const newAccount = {
     
-    Address: Address,
-    Name: Name,
-    
-  };
   try {
     console.log("CurrentID"+CurrentID)
     const docRef = doc(db, "Whitelist", CurrentID);
@@ -184,7 +179,7 @@ useEffect(() => {
                           <td>
                             {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
                               <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" >
-                               <button> <Plus onClick={()=>{setIsFormVisible("true"); setAddress('');setName('');setCurrentID('')}} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
+                               <button> <Plus onClick={()=>{setIsFormVisible("true");setIsUpdate('false'); setAddress('');setName('');setCurrentID('')}} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
                             </div>}
                             

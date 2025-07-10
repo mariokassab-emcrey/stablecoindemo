@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Navigate } from "react-router-dom";
-import { Table,Modal, Button, Row, Col, Form } from "react-bootstrap";
+import { Button, Row, Col, Form } from "react-bootstrap";
 const LoginPage = ({ admin, setAdmin }) => {
   
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const auth = getAuth();
 async function handleLogin(event) {
  
