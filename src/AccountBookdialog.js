@@ -67,7 +67,7 @@ useEffect(() => {
         Address Book
       </button>
       <dialog ref={dialogRef}>
-        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-gray-700">
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-customgray">
 
                             <div class="flex justify-between items-center mb-8">
                                 <div class="flex items-center gap-4">
@@ -79,7 +79,7 @@ useEffect(() => {
                              
                             </div>
 
-                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-gray-700 mb-6">
+                            <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-customgray mb-6">
                                 <div class="flex justify-between items-center">
                                     <div class="flex gap-8">
                                        

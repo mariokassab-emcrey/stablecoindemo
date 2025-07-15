@@ -121,7 +121,7 @@ function PayDialog(props) {
       <button class="text-sm font-medium text-button hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button focus:outline-none" onClick={openDialog}>Pay</button>
       <dialog ref={dialogRef}>
         {/* <h2>Dialog Title</h2> */}
-        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg noBorder border-gray-700">
+        <div class="container mx-auto px-4 py-2 bg-panel shadow-lg border border-customgray">
 
           {/* <!-- Title bar --> */}
           <div class="flex justify-between items-center mb-8">
@@ -134,7 +134,7 @@ function PayDialog(props) {
           </div>
 
           {/* <!-- Account Info Panel --> */}
-          <div class="bg-card rounded-lg shadow-lg px-6 py-1 noBorder border-gray-700 mb-6">
+          <div class="bg-card rounded-lg shadow-lg px-6 py-1 border border-customgray mb-6">
             <div class="flex justify-between items-center">
               <div class="flex gap-8">
 
