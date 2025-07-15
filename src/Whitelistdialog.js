@@ -5,17 +5,15 @@ import { collection, getDocs,addDoc,deleteDoc,doc,updateDoc } from "firebase/fir
 import { db } from "./firebaseConfig";
 import { Check,Copy,Plus,SquareX,Trash2,X,EditIcon } from 'lucide-react';
 import { ethers } from 'ethers';
-import contractAbi from './ABI.json';
+import contractAbi from './RUH25ABII.json';
 function WhitelistDialog(props) {
   const dialogRef = useRef(null);
   const [Whitelist, setWhitelist] = useState([]);
   const [IsFormVisible,setIsFormVisible] = useState(["false"]);
-  const [canReceiveFlags,setCanReceiveFlags] = useState([""]);
  const [IsUpdate,setIsUpdate] = useState(["false"]);
  const [Address,setAddress] = useState([""]);
- const [canSendFlags,setCanSendFlags] = useState([""]);
- const [isBlacklistedFlags,setIsBlacklistedFlags] = useState([""]);
- 
+ const [flagMap,setFlagMap] = useState([""]);
+ const [contractAddress,setContractAddress] = useState('0xe987da3236b978c452519fea733833ea5accba4b');
 
   const openDialog = () => {
   
@@ -38,29 +36,20 @@ async function handleSubmit(event) {
   if(IsUpdate==="true"){
     
     //call marie on update
-     const contractAddress = '0x715df9a13088ef923120f3355aa27441f9155614';
+     
   // const provider = new ethers.JsonRpcProvider('https://fluent-chaotic-lake.ethereum-sepolia.quiknode.pro/b989ab5dc846e9bfab7637b37a5b36f0bcd11fb5/');
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-  let flag = '0x00001';
-  if(event.target.isBlacklistedFlags.value==='true')
-    flag = '0x00004';
-  else{
-    if(event.target.canReceiveFlags.value==='true')
-       flag = '0x00002';
-      else{
-        if(event.target.canSendFlags.value==='true'){
-          flag = '0x00003';
-        }
-      }
-  }
-console.log("event.target.Address.value"+event.target.Address.value)
-  console.log("flag"+flag)
+  
 
 
-  const tx = await contract.addPermission(event.target.Address.value,flag);
-  await fetchMenu();
+  await contract.setPermissions(event.target.Address.value,event.target.flagMap.value);
+  setTimeout(async function(){
+     await fetchMenu();
+    //do what you need here
+}, 20000);
+ 
   // try {
   //   console.log("CurrentID"+CurrentID)
   //   const docRef = doc(db, "Whitelist", CurrentID);
@@ -77,23 +66,18 @@ console.log("event.target.Address.value"+event.target.Address.value)
   else{
   
   try {
-      {
-      try {
-        const contractAddress = '0x715df9a13088ef923120f3355aa27441f9155614';
-  // const provider = new ethers.JsonRpcProvider('https://fluent-chaotic-lake.ethereum-sepolia.quiknode.pro/b989ab5dc846e9bfab7637b37a5b36f0bcd11fb5/');
-  const provider = new ethers.BrowserProvider(window.ethereum);
+      
+      
+    const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-  const tx = await contract.setPermissions(event.target.Address.value,event.target.Name.value);
-        // const result = await contract.setPermissions(event.target.Address.value,event.target.Name.value);
-        // console.log("result"+result);
-      } catch (error) {
-        console.error('Error calling contract function:', error);
-      }
-    }
-
-      await addDoc(collection(db, "Whitelist"), newAccount);
-       await fetchMenu()
+const tx = await contract.setPermissions(event.target.Address.value,event.target.flagMap.value);
+  setTimeout(async function(){
+     await fetchMenu();
+    //do what you need here
+}, 20000);
+      // await addDoc(collection(db, "Whitelist"), newAccount);
+      //  await fetchMenu()
       // alert("Account Added successfully!");
       setIsFormVisible("false")
       // ✅ Redirect back to menu after successful order
@@ -110,42 +94,17 @@ console.log("event.target.Address.value"+event.target.Address.value)
 
 }
  const fetchMenu = async () => {
-  const contractAddress = '0x715df9a13088ef923120f3355aa27441f9155614';
   // const provider = new ethers.JsonRpcProvider('https://fluent-chaotic-lake.ethereum-sepolia.quiknode.pro/b989ab5dc846e9bfab7637b37a5b36f0bcd11fb5/');
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-  const menuCollection = await contract.getWhitelistedWithPermissions();
-  console.log("menuCollection"+menuCollection)
-    console.log("menuCollection0"+menuCollection[0])
-    console.log("menuCollection1"+menuCollection[1])
-    console.log("menuCollection2"+menuCollection[2])
-    console.log("menuCollection3"+menuCollection[3])
-      // const menuCollection = await getDocs(collection(db, "Whitelist"));
-      //  console.log("menuCollection.docs"+menuCollection.docs[0].id)
-    // const Addresses  {
-      
-    //     Address: menuCollection[0],
-    //     canSendFlags: menuCollection.[1],
-    //     canReceiveFlags:menuCollection.[2],
-    //     isBlacklistedFlags:menuCollection.[3],
-    //   }
-      const Addresses = () => ({
-      
-        Address: menuCollection[0],
-        canSendFlags: menuCollection[1],
-        canReceiveFlags:menuCollection[2],
-        isBlacklistedFlags:menuCollection[3],
-      });
+  const menuCollection = await contract.getAllPermissionStatuses()
      const whitelistAddresses = menuCollection[0].map((collection,index)=>(
       {
         Address:collection,
-        canSendFlags:menuCollection[1][index],
-        canReceiveFlags:menuCollection[2][index],
-        isBlacklistedFlags:menuCollection[3][index],
+        FlagMap:menuCollection[1][index],
       }
      ))
-     console.log("whitelistAddresses"+whitelistAddresses[2].canReceiveFlags)
       setWhitelist(whitelistAddresses);
     };
 useEffect(() => {
@@ -184,18 +143,9 @@ useEffect(() => {
                                    Address
                                
                               </td>
-                               <td>
                               
-                                   Send
-                               
-                              </td>
                                <td>
-                             Recieve
-                                   
-                                 
-                              </td>
-                               <td>
-                              BlackListed
+                              Status
                                    
                                 
                               </td>
@@ -224,29 +174,14 @@ useEffect(() => {
                               </td>
                               <td className="td-home">
                                 <div class="flex flex-col">
-                                  <p class="text-lg font-bold">{account.canSendFlags.toString()}</p>
+                                  <p class="text-lg font-bold">{account.FlagMap}</p>
                                   <div class="display: flex gap-1 text-gray-300">
                                   </div>
                                 </div>
                               </td>
-                              
-                               <td className="td-home">
-                                <div class="flex flex-col">
-                                  <p class="text-lg font-bold">{account.canReceiveFlags.toString()}</p>
-                                  <div class="display: flex gap-1 text-gray-300">
-                                    
-                                  </div>
-                                </div>
-                              </td>
+                             
                                
- <td className="td-home">
-                                <div class="flex flex-col">
-                                  <p class="text-lg font-bold">{account.isBlacklistedFlags.toString()}</p>
-                                  <div class="display: flex gap-1 text-gray-300">
-                                   
-                                  </div>
-                                </div>
-                              </td>
+ 
                               <td style={{ width: '200px' }}>
                                 <Row style={{ paddingLeft: '25px' }}>
 
@@ -273,9 +208,8 @@ useEffect(() => {
                                    onClick={ () => {setIsUpdate("true")
                                     setIsFormVisible("true")
                                     setAddress(account.Address)
-                                    setCanSendFlags(account.canSendFlags)
-                                    setCanReceiveFlags(account.canReceiveFlags)
-                                    setIsBlacklistedFlags(account.isBlacklistedFlags)
+                                    setFlagMap(account.FlagMap)
+                                    // setFlag(account)
                                     
                                     
                                      
@@ -291,7 +225,7 @@ useEffect(() => {
                           <td>
                             {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
                               <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" >
-                               <button> <Plus onClick={()=>{setIsFormVisible("true");setIsUpdate('false'); setAddress('');setCanReceiveFlags('');setCanSendFlags('');setIsBlacklistedFlags('')}} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
+                               <button> <Plus onClick={()=>{setIsFormVisible("true");setIsUpdate('false'); setAddress('');setFlagMap('')}} class="w-5 h-5 text-gray-500 group-hover:text-secondary" /></button>
                               </div>
                             </div>}
                             
@@ -314,54 +248,18 @@ useEffect(() => {
               </Form.Group>
                                                
                                                 </Col>
-                                                <Col><Form.Group controlId="canSendFlags">
-                <Form.Label className="FormLabel">canSendFlags <font COLOR="#ff0000">*</font></Form.Label>
+                                                <Col><Form.Group controlId="flagMap">
+                <Form.Label className="FormLabel">status <font COLOR="#ff0000">*</font></Form.Label>
                 <Form.Control
                   type="text"
                  required
-                 defaultValue={canSendFlags}
+                 defaultValue={flagMap}
                 //   defaultValue={this.props.AssignmentTopic}
                 //   dir="RTL"
                   name="Name"
                 ></Form.Control>
               </Form.Group>
                                                 </Col>
-                                                <Col><Form.Group controlId="canReceiveFlags">
-                <Form.Label className="FormLabel">canReceiveFlags <font COLOR="#ff0000">*</font></Form.Label>
-                <Form.Control
-                  type="text"
-                 required
-                 defaultValue={canReceiveFlags}
-                //   defaultValue={this.props.AssignmentTopic}
-                //   dir="RTL"
-                  name="Name"
-                ></Form.Control>
-              </Form.Group>
-                                                </Col>
-                                                <Col><Form.Group controlId="isBlacklistedFlags">
-                <Form.Label className="FormLabel">isBlacklistedFlags <font COLOR="#ff0000">*</font></Form.Label>
-                <Form.Control
-                  type="text"
-                 required
-                 defaultValue={isBlacklistedFlags}
-                //   defaultValue={this.props.AssignmentTopic}
-                //   dir="RTL"
-                  name="Name"
-                ></Form.Control>
-              </Form.Group>
-                                                </Col>
-                                                {/* <Col> <Form.Group controlId="Amount">
-                <Form.Label className="FormLabel">
-                  Amount
-                </Form.Label>
-                <Form.Control
-                  type="float"
-                  name="Amount"
-                  
-                 
-                ></Form.Control>
-              </Form.Group>
-                                                </Col> */}
                                                 <Col sm="2"><Button style={{marginTop: '33px'}} id="WhitelistDialogPayBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" formAction="submitBook" type='submit' >
                                         <Plus/>
                                     </Button></Col>
@@ -379,7 +277,7 @@ useEffect(() => {
                             
                        </Row>
                                           </Form> : <div class=" flex-1 min-w-0">
-                              <button onClick={()=>{setIsFormVisible("true");setIsUpdate('false'); setAddress('');setCanReceiveFlags('');setCanSendFlags('');setIsBlacklistedFlags('')}}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
+                              <button onClick={()=>{setIsFormVisible("true");setIsUpdate('false'); setAddress('');setFlagMap('');}}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
                             </div> }     
                             
                           </td>
