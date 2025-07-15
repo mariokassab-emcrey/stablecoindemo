@@ -6,41 +6,15 @@ import { db } from "./firebaseConfig";
 import { Copy, ArrowDownRight, ArrowUpRight } from 'lucide-react';
 function Transactions(props) {
   const dialogRef = useRef(null);
-  const [Transactions, setTransactions] = useState([]);
 
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const menuCollection = await getDocs(collection(db, "Transaction"));
-        console.log("TransactionDateTime.seconds" + menuCollection.docs[0].data().TransactionDateTime)
-        console.log("(new Date(doc.data().TransactionDateTime.seconds * 1000)).toLocaleString" + new Date(menuCollection.docs[0].data().TransactionDateTime.seconds * 1000))
-        const transactions = menuCollection.docs.map((doc) => ({
-          ID: doc.id,
-          From: doc.data().From,
-          Name: doc.data().Name,
-          To: doc.data().To,
-          Amount: doc.data().Amount,
-          TransactionDateTime: (new Date(doc.data().TransactionDateTime.seconds * 1000)).toString(),
-          Type: doc.data().Type,
-          Status: doc.data().Status
-
-        }));
-        console.log(transactions.length)
-        setTransactions(transactions);
-
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-    fetchTransactions();
-  }, []);
+  
+  
 
   return (
     <Table selec className="noBorder" hover size="sm" style={{ color: 'white', border: 'none' }}>
-      {Transactions.length !== 0 ? (
+      {props.transactions.length !== 0 ? (
         <tbody className="noBorder">
-          {Transactions.map(
+          {props.transactions.map(
             (transaction, index) => (
               transaction.From === props.account ?
                 <tr className="noBorder" key={index}>
@@ -69,8 +43,8 @@ function Transactions(props) {
                     <h2 style={transaction.Status === 'Pending' ? { color: '#fa8237' } : { color: '#6fde8d' }}>{transaction.Status}</h2>
                   </td>
                   <td className="noBorder">
-                    <h2>{transaction.TransactionDateTime.slice(0, 15)}</h2>
-                    <p>{transaction.TransactionDateTime.slice(15, 25)}</p>
+                    {/* <h2>{transaction.TransactionDateTime.slice(0, 15)}</h2>
+                    <p>{transaction.TransactionDateTime.slice(15, 25)}</p> */}
                   </td>
                   <td className="noBorder">
                     {transaction.Type === 'Pay' ?

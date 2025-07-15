@@ -3,7 +3,7 @@ import { Row, Col, Form } from "react-bootstrap";
 import './App.css';
 import * as ethers from "../node_modules/ethers/dist/ethers.min.js";
 import AccountBookDialog from './AccountBookdialog.js';
-import { collection, updateDoc, addDoc } from "firebase/firestore";
+import { collection, updateDoc, addDoc,doc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { SquareX, Copy } from 'lucide-react';
 
@@ -61,19 +61,41 @@ function PayDialog(props) {
     try {
       const tx = await writeStablecoinContract.transfer(event.target.Address.value, valueDecimal18);
       console.log(`Transaction hash: ${tx.hash}`);
-
+      props.addDataToArray({
+          From: props.account,
+          Name: event.target.Reference.value,
+          To: event.target.Address.value,
+          Amount: event.target.Amount.value,
+          TransactionDateTime: new Date(),
+          Status: 'Pending',
+          Type:'Pay'
+        })
+      closeDialog();
+      
+      
       const receipt = await tx.wait();
-      props.setStatus('Successful')
-      const docref = await addTransaction('Successful');
+    
+      const docref = await addTransaction('Pending');
+//      if(docref)
+//       setTimeout(function() {
+  
+// }, 2000);
+     
       console.log("docref" + docref)
       console.log("docref.id" + docref.id)
-      alert("Transaction successfully created");
-      window.location.reload(false);
+      await updateTransaction(docref.id)
+      // setTimeout(function() {
+props.updateStatus('true')
+// }, 2000);
+     
+      
+      // alert("Transaction successfully created");
+      // window.location.reload(false);
     } catch (error) {
       console.error("Error sending transaction:", error);
     }
 
-    async function updateTransaction(status, id) {
+    async function updateTransaction(id) {
       try {
         const transaction = {
           From: props.account,
@@ -86,9 +108,10 @@ function PayDialog(props) {
           Type: 'Pay'
 
         }
+         const docRef = doc(db, "Transaction", id);
+        // const docRef = collection(db, "Transactions", id);
         console.log("id" + id)
-        await updateDoc(id, transaction);
-        alert("Transaction updated successfully!");
+        await updateDoc(docRef, transaction);
 
       } catch (error) {
         console.error("Error updating the transaction: ", error);
@@ -104,7 +127,8 @@ function PayDialog(props) {
           To: event.target.Address.value,
           Amount: event.target.Amount.value,
           TransactionDateTime: new Date(),
-          Status: status
+          Status: status,
+          Type:'Pay'
         }
         return await addDoc(collection(db, "Transaction"), transaction);
 
