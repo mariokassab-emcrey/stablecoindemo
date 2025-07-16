@@ -198,7 +198,7 @@ props.updateStatus('true')
               <Col>
                 <Form.Group controlId="Address">
                   <Form.Label className="FormLabel">
-                    Address<font COLOR="#ff0000">*</font>
+                    Address<font color="#ff0000">*</font>
                   </Form.Label>
                   <Form.Control
                     type="float"
@@ -211,7 +211,7 @@ props.updateStatus('true')
               </Col>
               <Col> <Form.Group controlId="Amount">
                 <Form.Label className="FormLabel">
-                  Amount<font COLOR="#ff0000">*</font>
+                  Amount<font color="#ff0000">*</font>
                 </Form.Label>
                 <Form.Control
                   type="float"

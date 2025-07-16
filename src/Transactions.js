@@ -11,7 +11,7 @@ function Transactions(props) {
   
 
   return (
-    <Table selec className="noBorder" hover size="sm" style={{ color: 'white', border: 'none' }}>
+    <Table className="noBorder" hover size="sm" style={{ color: 'white', border: 'none' }}>
       {props.transactions.length !== 0 ? (
         <tbody className="noBorder">
           {props.transactions.map(
