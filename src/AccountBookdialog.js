@@ -152,62 +152,39 @@ useEffect(() => {
                             
                           </td>
                           <td>
-                            {IsFormVisible === 'true' ? <Form style={{color : 'white'}} onSubmit={handleSubmit}>
-                                            <Row>
-                                                <Col>
-                                                <Form.Group controlId="Address">
-                <Form.Label className="FormLabel">
-                  Address<font COLOR="#ff0000">*</font>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  name="Address"
-                  required
-                 
-                ></Form.Control>
-              </Form.Group>
-                                               
-                                                </Col>
-                                                <Col><Form.Group controlId="Name">
-                <Form.Label className="FormLabel">Name <font COLOR="#ff0000">*</font></Form.Label>
-                <Form.Control
-                  type="text"
-                 required
-                //   defaultValue={this.props.AssignmentTopic}
-                //   dir="RTL"
-                  name="Name"
-                ></Form.Control>
-              </Form.Group>
-                                                </Col>
-                                                {/* <Col> <Form.Group controlId="Amount">
-                <Form.Label className="FormLabel">
-                  Amount
-                </Form.Label>
-                <Form.Control
-                  type="float"
-                  name="Amount"
-                  
-                 
-                ></Form.Control>
-              </Form.Group>
-                                                </Col> */}
-                                                <Col sm="2"><Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" formAction="submitBook" type='submit' >
+                            {IsFormVisible === 'true' ? 
+                            <Form style={{color : 'white'}} onSubmit={handleSubmit}>
+                              <Row>
+                                <Col>
+                                  <Form.Group controlId="Address">
+                                    <Form.Label className="FormLabel">Address<font COLOR="#ff0000">*</font></Form.Label>
+                                    <Form.Control type="text" name="Address" required></Form.Control>
+                                  </Form.Group>
+                                </Col>
+                                <Col>
+                                  <Form.Group controlId="Name">
+                                    <Form.Label className="FormLabel">Name <font COLOR="#ff0000">*</font></Form.Label>
+                                    <Form.Control type="text" required name="Name"></Form.Control>
+                                  </Form.Group>
+                                </Col>
+                                <Col sm="2">
+                                  <Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" formAction="submitBook" type='submit' >
                                         <Plus/>
-                                    </Button></Col>
-                                    <Col sm="2"><Button style={{marginTop: '33px'}} id="AccountBookDialogXCancelBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" onClick={()=>setIsFormVisible("false")} >
+                                  </Button>
+                                </Col>
+                                <Col sm="2">
+                                  <Button style={{marginTop: '33px'}} id="AccountBookDialogXCancelBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" onClick={()=>setIsFormVisible("false")} >
                                         <X/>
-                                    </Button></Col>
-                                            </Row>
-                                            <br></br>
-                                            <Row sm={2} >
-                                    {/* <Col lg='9'>
-                                    
-                                    </Col> */}
-                                {/* </div> */}
-                            {/* </div> */}
+                                  </Button>
+                                </Col>
+                              </Row>
+                              <br></br>
+                              <Row sm={2} >
                             
-                       </Row>
-                                          </Form> : <div class=" flex-1 min-w-0">
+                              </Row>
+                            </Form> 
+                            : 
+                            <div class=" flex-1 min-w-0">
                               <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
                             </div> }     
                             
