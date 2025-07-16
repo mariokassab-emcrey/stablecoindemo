@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+    <p>test 17</p>
+    <p id="one"></p>
+    <p id="two"></p>
+    <p id="three"></p>
+
+    <p>create 17</p>
+    <p id="four"></p>
+    <p id="five"></p>
+    <p id="six"></p>
+
+
+    <script type="text/javascript" src="permissions.js"></script>
+    <script>
+        document.getElementById("one").innerText = PERMISSION_WHITELIST_SEND+" : "+isPermissioned(17,PERMISSION_WHITELIST_SEND);
+        document.getElementById("two").innerText = PERMISSION_FREEZE_RECEIVE+" : "+isPermissioned(17,PERMISSION_FREEZE_RECEIVE);
+        document.getElementById("three").innerText = PERMISSION_BLACKLIST_SEND+" : "+isPermissioned(17,PERMISSION_BLACKLIST_SEND);
+
+        var output = 0;
+        output = setPermissions(output,PERMISSION_WHITELIST_SEND);
+        document.getElementById("four").innerText = PERMISSION_WHITELIST_SEND+" : "+output;
+        output = setPermissions(output,PERMISSION_BLACKLIST_SEND);
+        document.getElementById("five").innerText = PERMISSION_FREEZE_RECEIVE+" : "+output;
+        output = setPermissions(output,PERMISSION_BLACKLIST_SEND);
+        document.getElementById("six").innerText = PERMISSION_BLACKLIST_SEND+" : "+output;
+
+    </script>
+
+
+
+
+</body>
+</html>-
