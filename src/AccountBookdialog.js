@@ -177,14 +177,14 @@ useEffect(() => {
                                   <input type="text" id="newName" class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"
                                     defaultValue="name" 
                                     onChange={(event)=>setNewName(event.target.value)}
-                                    onFocus={()=>this.value=" "}
-                                    ></input>
+                                    onFocus={()=>this.value=" "}>
+                                  </input>
                                 </div>
                                 <div class="flex flex-col items-center py-1">
-                                    {/*
-                                    <input type="text" id="payReference" value="reference" onFocus="this.value=''" class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"></input>
-                                    */}
-                                    <input type="text" id="newAddress" value="address" onChange={setNewAddress} class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"></input>
+                                    <input type="text" id="newAddress" class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"
+                                      defaultValue="address" 
+                                      onChange={setNewAddress} >
+                                    </input>
                                 </div>
                               </div>
                             : 
