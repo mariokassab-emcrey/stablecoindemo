@@ -8,7 +8,12 @@ function AccountBookDialog(props) {
   const dialogRef = useRef(null);
   const [AccountBook, setAccountBook] = useState([]);
   const [IsFormVisible,setIsFormVisible] = useState(["false"]);
- 
+  const [newName,setNewName] = useState('');
+
+  const [newAddress,setNewAddress] = useState('');
+
+
+
   const openDialog = () => {
   
            
@@ -116,7 +121,7 @@ useEffect(() => {
                               </td>
 
                               <td style={{ width: '200px' }}>
-                                <Row style={{ paddingLeft: '25px' }}>
+                                <Row class="flex" style={{ paddingLeft: '25px' }}>
 
                                   {props.allowPay === 'true' 
                                     ? (
@@ -130,13 +135,13 @@ useEffect(() => {
                                     )
                                     :(<div/>)}
 
-                                  <div style={{ width: '10px', height: '10px' }}></div>
-                                  <Trash2 class="text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
+                                  <Trash2 class="flex ml-auto text-gray-300 hover:text-secondary p-1 rounded-full hover:bg-gray-700 transition-colors"
                                     onClick={async () => {
                                       await deleteDoc(doc(db, "Book", account.ID));
                                       setAccountBook(AccountBook.filter((item) => item.ID !== account.ID));
                                     }}>
                                   </Trash2>
+                                  <div style={{ width: '10px', height: '10px' }}></div>
                                 </Row>
                               </td>
                             </tr>:null
@@ -144,52 +149,60 @@ useEffect(() => {
                         )}
                         <tr>
                           <td>
-                            {IsFormVisible === "true" ? null : <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
-                              <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onClick={()=>setIsFormVisible("true")}>
-                                <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary" />
+                            {IsFormVisible === "true" 
+                            ? 
+                              <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                                <button class="focus:outline-none" onClick={()=>console.info("NewName: ",newName)}>
+                                  <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary">
+                                    <Check class="w-5 h-5 text-green-700 group-hover:text-secondary" />
+                                  </div>
+                                </button>
                               </div>
-                            </div>}
+                            : 
+                              <div class="flex items-center gap-4 p-1 hover:bg-gray-700 rounded">
+                                <button class="focus:outline-none" onClick={()=>setIsFormVisible("true")}>
+                                  <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary">
+                                    <Plus class="w-5 h-5 text-gray-500 group-hover:text-secondary" />
+                                  </div>
+                                </button>
+                              </div>
+                            }
                             
                           </td>
                           <td>
-                            {IsFormVisible === 'true' ? 
-                            <Form style={{color : 'white'}} onSubmit={handleSubmit}>
-                              <Row>
-                                <Col>
-                                  <Form.Group controlId="Address">
-                                    <Form.Label className="FormLabel">Address<font COLOR="#ff0000">*</font></Form.Label>
-                                    <Form.Control type="text" name="Address" required></Form.Control>
-                                  </Form.Group>
-                                </Col>
-                                <Col>
-                                  <Form.Group controlId="Name">
-                                    <Form.Label className="FormLabel">Name <font COLOR="#ff0000">*</font></Form.Label>
-                                    <Form.Control type="text" required name="Name"></Form.Control>
-                                  </Form.Group>
-                                </Col>
-                                <Col sm="2">
-                                  <Button style={{marginTop: '33px'}} id="AccountBookDialogPayBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" formAction="submitBook" type='submit' >
-                                        <Plus/>
-                                  </Button>
-                                </Col>
-                                <Col sm="2">
-                                  <Button style={{marginTop: '33px'}} id="AccountBookDialogXCancelBtn"  class="text-button hover:text-white text-sm font-medium px-3 py-1 rounded hover:bg-gray-700 transition-colors border border-button" onClick={()=>setIsFormVisible("false")} >
-                                        <X/>
-                                  </Button>
-                                </Col>
-                              </Row>
-                              <br></br>
-                              <Row sm={2} >
-                            
-                              </Row>
-                            </Form> 
+                            {IsFormVisible === 'true' 
+                            ? 
+                              <div class=" flex-1 min-w-0">
+                                <div class="flex flex-col items-center py-1">
+                                  <input type="text" id="newName" class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"
+                                    defaultValue="name" 
+                                    onChange={(event)=>setNewName(event.target.value)}
+                                    onFocus={()=>this.value=" "}
+                                    ></input>
+                                </div>
+                                <div class="flex flex-col items-center py-1">
+                                    {/*
+                                    <input type="text" id="payReference" value="reference" onFocus="this.value=''" class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"></input>
+                                    */}
+                                    <input type="text" id="newAddress" value="address" onChange={setNewAddress} class="w-80 text-sm text-gray-300 bg-panel px-1 focus:outline-none"></input>
+                                </div>
+                              </div>
                             : 
-                            <div class=" flex-1 min-w-0">
-                              <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
-                            </div> }     
-                            
+                              <div class=" flex-1 min-w-0">
+                                <button onClick={()=>setIsFormVisible("true")}><h3 class="font-medium text-gray-400 group-hover:text-secondary" >Add New Address</h3></button>
+                              </div>}   
                           </td>
-                          <td></td>
+                          <td>
+                            {IsFormVisible === 'true' 
+                            ? 
+                            <button class="gap-4 focus:outline-none">
+                              <div class="group w-10 h-10 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center hover:border-secondary" onClick={()=>setIsFormVisible("false")}>
+                                <X class="w-5 h-5 text-red-700 group-hover:text-secondary" />
+                              </div>
+                            </button>
+                            :
+                            null}
+                          </td>
                         </tr>
 
                       </tbody>
@@ -198,17 +211,10 @@ useEffect(() => {
                       <tbody></tbody>
                     )}
                 </Table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            
-                                          
-                                     
-                                          </div>
-            
-                                    
-       
+              </div>
+          </div>
+      </div>
+    </div>
       </dialog>
     </div>
   );

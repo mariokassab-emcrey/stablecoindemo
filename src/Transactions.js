@@ -7,9 +7,6 @@ import { Copy, ArrowDownRight, ArrowUpRight } from 'lucide-react';
 function Transactions(props) {
   const dialogRef = useRef(null);
 
-  
-  
-
   return (
     <Table className="noBorder" hover size="sm" style={{ color: 'white', border: 'none' }}>
       {props.transactions.length !== 0 ? (
